@@ -1,0 +1,57 @@
+.tab-pane{
+    -fx-tab-min-height: 3em;
+    -fx-tab-max-height: 3em;
+    -fx-tab-min-width: 5em;
+}
+.tab {
+    -fx-alignment: center;
+    -fx-background-color: #009688;
+    -fx-border-color: #263238 #263238 #009688 #263238;
+    -fx-border-width: 1;
+    -fx-font-size: 1.25em
+}
+.tab:selected{
+    -fx-background-color: #4DB6AC;
+    -fx-border-color: #263238 #263238 #4DB6AC #263238;
+    -fx-border-width: 1;
+}
+.tab:selected .tab-label{
+    -fx-text-fill: #FFF;
+}
+.tab-label{
+    -fx-text-fill: #FFF;
+}
+.tab-header-background{
+    -fx-background-color: #263238;
+}
+
+/** SubTab **/
+.subTabPane .tab-header-background{
+    -fx-background-color: #4DB6AC;
+}
+.subTabPane{
+    -fx-tab-min-height: 2em;
+    -fx-tab-max-height: 2em;
+}
+.subTab{
+    -fx-alignment: center;
+    -fx-background-color: #4DB6AC;
+    -fx-font-size: 1em;
+    -fx-border-width: 0;
+}
+
+.subTab:selected{
+    -fx-background-color: #FFF;
+    -fx-border-color: #4DB6AC #4DB6AC #FFF #4DB6AC;
+    -fx-border-width: 1;
+}
+
+.subTab:selected .tab-label{
+    -fx-text-fill: #009688;
+}
+
+.anchorPane{
+    -fx-background-color: #FFF;
+}
+
+/*http://stackoverflow.com/questions/32394172/javafx-cant-remove-space-at-top-of-tabs*/
