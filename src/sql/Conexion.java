@@ -1,5 +1,6 @@
 package sql;
 
+import consultorio.Tools;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -18,30 +19,38 @@ public class Conexion{
     private static final String DRIVERNAME = "com.mysql.jdbc.Driver"; 
     private static Connection conn = null;
     
-    
     public static Connection getConnection() {
         try {
             Class.forName(DRIVERNAME);
             try {
                 conn = DriverManager.getConnection(HOST, USER, PASSWORD);
             } catch (SQLException ex) {
-                System.out.println("No se pudo conectar con la base de datos."); 
+                Tools.mensajeError("No se pudo conectar con la base de datos.");
             }
         } catch (ClassNotFoundException ex) {
-            // log an exception. for example:
-            System.out.println("No se encontro el driver."); 
+            Tools.mensajeError("No se encontro el driver.");
         }
         return conn;
     }
     
     public static ResultSet executeQuery(String query){
+        getConnection();
         ResultSet rs = null;
         try {
             Statement stm = conn.createStatement();
             rs = stm.executeQuery(query);
         } catch (SQLException ex) {
-            System.out.println("Error en el query: " + ex);
+            Tools.mensajeError("Error en el query: " + ex);
         }
         return rs;
+    }
+    
+    public static void closeConnection(){
+        try {
+            if (conn != null) 
+                conn.close();
+        } catch (SQLException ex) {
+            Tools.mensajeError("Problema al cerrar la conexion " + ex);
+        }
     }
 }

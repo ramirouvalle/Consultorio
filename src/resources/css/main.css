@@ -50,8 +50,11 @@
     -fx-text-fill: #009688;
 }
 
-.anchorPane{
-    -fx-background-color: #FFF;
+.label{
+    -fx-text-fill: #263238;
+    -fx-text-alignment: right;
 }
-
+.title{
+    -fx-font-size: 1.3em;
+}
 /*http://stackoverflow.com/questions/32394172/javafx-cant-remove-space-at-top-of-tabs*/

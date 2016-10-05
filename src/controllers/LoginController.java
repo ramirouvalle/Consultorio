@@ -1,5 +1,6 @@
 package controllers;
 
+import consultorio.Tools;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,7 +19,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import models.Employee;
 
 /**
@@ -73,8 +73,10 @@ public class LoginController implements Initializable {
                 ((Node) event.getSource()).getScene().setRoot(root);
                  **/
             }else{
-                System.out.println("Vuelva a intentarlo..");
+                Tools.mensajeInfo("Usuario o contraseña incorrecta. Intente de nuevo.");
             }
+        }else{
+            Tools.mensajeInfo("Ingrese el usuario y la contraseña.");
         }
     }
 

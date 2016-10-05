@@ -1,8 +1,11 @@
 package models;
 
+import consultorio.Tools;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sql.Conexion;
 
 public class Employee {
@@ -86,8 +89,8 @@ public class Employee {
      * @return retorna si existe hace o no login el usuario
      */
     public Employee loginEmployee(Employee employee){
-        Connection conn = Conexion.getConnection();
-        ResultSet rs = Conexion.executeQuery("SELECT * FROM empleados WHERE user = '"+employee.username+"' AND password = '"+employee.password+"' ");
+        String query = "SELECT * FROM empleados WHERE user = '"+employee.username+"' AND password = '"+employee.password+"' ";
+        ResultSet rs = Conexion.executeQuery(query);
         try {
             if(rs.next()) {
                 int id_empleado = rs.getInt("id_empleado");
@@ -100,7 +103,9 @@ public class Employee {
                 return e1;
             }
         } catch (SQLException ex) {
-            System.out.println("xx" + ex);
+            Tools.mensajeError("Problema al intentar logearse.");
+        } finally{
+            Conexion.closeConnection();
         }
         return null;
     }

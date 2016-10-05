@@ -1,10 +1,19 @@
 package controllers;
 
+import consultorio.Tools;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
+import models.Patient;
 
 /**
  * FXML Controller class
@@ -14,7 +23,27 @@ import javafx.scene.control.Button;
 public class MainController implements Initializable {
 
     @FXML
-    private Button btnOption1;
+    private ToggleGroup genero;
+    @FXML
+    private Button btnGuardarPaciente;
+    @FXML
+    private Button btnLimpiar;
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextField txtApePat;
+    @FXML
+    private TextField txtApeMat;
+    @FXML
+    private RadioButton rbMasculino;
+    @FXML
+    private RadioButton rbFemenino;
+    @FXML
+    private DatePicker dpFecNacimiento;
+    @FXML
+    private TextArea txtDireccion;
+    @FXML
+    private TextField txtTelefono;
 
     /**
      * Initializes the controller class.
@@ -23,5 +52,42 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
     }    
+
+    @FXML
+    private void btnGuardarPaciente_onclick(ActionEvent event) {
+        String nombre, apePat, apeMat, direccion, telefono, genero, fechaNacimiento;
+        nombre = txtNombre.getText();
+        apePat = txtApePat.getText();
+        apeMat = txtApeMat.getText();
+        direccion = txtDireccion.getText();
+        telefono = txtTelefono.getText();
+        
+        try{
+            fechaNacimiento = dpFecNacimiento.getValue().toString();
+        }catch(NullPointerException ex){
+            Tools.mensajeInfo("Seleccione una fecha de nacimiento.");
+            return;
+        }
+        
+        try{
+            ToggleGroup toggleGroup = rbMasculino.getToggleGroup();
+            Toggle toggle = toggleGroup.getSelectedToggle();
+            RadioButton rbSelected = (RadioButton) toggle;
+            genero = rbSelected.getText();
+        }catch(NullPointerException ex){
+            Tools.mensajeInfo("Seleccione un genero.");
+            return;
+        }
+        
+        if (!nombre.equals("") && !apePat.equals("") && !apeMat.equals("") && !direccion.equals("") && !telefono.equals("") && !fechaNacimiento.equals("")) {
+            Patient patient = new Patient(nombre, apePat, apeMat, genero, fechaNacimiento, direccion, telefono);
+        }else{
+            Tools.mensajeInfo("Complete todo el formulario.");
+        }
+    }
+
+    @FXML
+    private void btnLimpiar_onclick(ActionEvent event) {
+    }
     
 }

@@ -1,3 +1,6 @@
 build/
-nbproject/
 test/
+dist/
+dist/Consultorio.html
+dist/Consultorio.jar
+dist/Consultorio.jnlp
