@@ -1,5 +1,8 @@
 package models;
 
+import java.sql.ResultSet;
+import sql.Conexion;
+
 /**
  *
  * @author RAP4
@@ -99,5 +102,12 @@ public class Patient {
         this.telefono = telefono;
     }
            
+    public void newPatient(Patient patient){
+        String query = "INSERT INTO pacientes (nombre, apePaterno, apeMaterno, genero, fechaNaciemiento, direccion, telefono) "
+                + "VALUES ('"+patient.getNombre()+"','"+patient.getApellidoPaterno()+"', '"+patient.getApellidoMaterno()+"', "
+                + " '"+patient.getFechaNacimiento()+"', '"+patient.getDireccion()+"', '"+patient.getTelefono()+"')";
+                
+        int result = Conexion.executeUpdate(query);
+    }
     
 }

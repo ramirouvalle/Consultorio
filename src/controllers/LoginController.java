@@ -64,7 +64,7 @@ public class LoginController implements Initializable {
                 Stage stageMain = new Stage();
                 stageMain.initModality(Modality.APPLICATION_MODAL);
                 stageMain.setTitle("Medical Center Express");
-                stageMain.setScene(new Scene(root));  
+                stageMain.setScene(new Scene(root)); 
                 stageMain.show();
 
                 /** Este codigo hace una vista nueva pero en la misma ventana 

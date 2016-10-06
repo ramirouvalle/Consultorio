@@ -53,6 +53,10 @@ public class MainController implements Initializable {
         
     }    
 
+    /**
+     * Al guardar el paciente en la base de datos
+     * @param event 
+     */
     @FXML
     private void btnGuardarPaciente_onclick(ActionEvent event) {
         String nombre, apePat, apeMat, direccion, telefono, genero, fechaNacimiento;
@@ -60,27 +64,27 @@ public class MainController implements Initializable {
         apePat = txtApePat.getText();
         apeMat = txtApeMat.getText();
         direccion = txtDireccion.getText();
-        telefono = txtTelefono.getText();
+        telefono = txtTelefono.getText();        
         
-        try{
-            fechaNacimiento = dpFecNacimiento.getValue().toString();
-        }catch(NullPointerException ex){
-            Tools.mensajeInfo("Seleccione una fecha de nacimiento.");
-            return;
-        }
-        
-        try{
-            ToggleGroup toggleGroup = rbMasculino.getToggleGroup();
-            Toggle toggle = toggleGroup.getSelectedToggle();
-            RadioButton rbSelected = (RadioButton) toggle;
-            genero = rbSelected.getText();
-        }catch(NullPointerException ex){
-            Tools.mensajeInfo("Seleccione un genero.");
-            return;
-        }
-        
-        if (!nombre.equals("") && !apePat.equals("") && !apeMat.equals("") && !direccion.equals("") && !telefono.equals("") && !fechaNacimiento.equals("")) {
+        if (!nombre.equals("") && !apePat.equals("") && !apeMat.equals("") && !direccion.equals("") && !telefono.equals("")) {
+            try{
+                fechaNacimiento = dpFecNacimiento.getValue().toString();
+            }catch(NullPointerException ex){
+                Tools.mensajeInfo("Seleccione una fecha de nacimiento.");
+                return;
+            }
+
+            try{
+                Toggle toggle = rbMasculino.getToggleGroup().getSelectedToggle();
+                RadioButton rbSelected = (RadioButton) toggle;
+                genero = rbSelected.getText();
+            }catch(NullPointerException ex){
+                Tools.mensajeInfo("Seleccione un genero.");
+                return;
+            }
+            
             Patient patient = new Patient(nombre, apePat, apeMat, genero, fechaNacimiento, direccion, telefono);
+            patient.newPatient(patient);
         }else{
             Tools.mensajeInfo("Complete todo el formulario.");
         }

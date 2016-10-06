@@ -1,6 +1,16 @@
+# NetBeans specific #
+nbproject/private/
 build/
-test/
+nbbuild/
 dist/
-dist/Consultorio.html
-dist/Consultorio.jar
-dist/Consultorio.jnlp
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# Class Files #
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear

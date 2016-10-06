@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../resources/css/main.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
+<TabPane prefHeight="600.0" prefWidth="800.0" stylesheets="@../resources/css/main.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
   <tabs>
     <Tab text="%lblTab1">
          <content>
@@ -58,7 +58,7 @@
                                           <DatePicker fx:id="dpFecNacimiento" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                           <TextArea fx:id="txtDireccion" prefHeight="100.0" prefWidth="206.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                           <TextField fx:id="txtTelefono" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                          <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                          <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                                              <children>
                                                 <Button fx:id="btnGuardarPaciente" mnemonicParsing="false" onAction="#btnGuardarPaciente_onclick" text="%btnGuardarPaciente" />
                                                 <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#btnLimpiar_onclick" text="%btnLimpiar" />

@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,7 +16,7 @@ import java.sql.Statement;
 public class Conexion{
     private static final String DB = "consultorio";
     private static final String USER = "root";
-    private static final String PASSWORD = "root";
+    private static final String PASSWORD = "";
     private static final String HOST = "jdbc:mysql://localhost:3306/"+DB+"?connectTimeout=5000";
     private static final String DRIVERNAME = "com.mysql.jdbc.Driver"; 
     private static Connection conn = null;
@@ -33,6 +35,11 @@ public class Conexion{
         return conn;
     }
     
+    /**
+     * Ejecuta un query y nos retorna un ResultSet
+     * @param query
+     * @return ResultSet
+     */
     public static ResultSet executeQuery(String query){
         getConnection();
         ResultSet rs = null;
@@ -43,6 +50,22 @@ public class Conexion{
             Tools.mensajeError("Error en el query: " + ex);
         }
         return rs;
+    }
+    
+    /**
+     * Insert, update and delete
+     * @param query 
+     * @return Retorna el numero de filas afectadas o 0 si no afecto ninguna.
+     */
+    public static int executeUpdate(String query){
+        getConnection();
+        try{
+            Statement stm = conn.createStatement();
+            return stm.executeUpdate(query);
+        } catch (SQLException ex) {
+            Tools.mensajeError("Error en el query: " + ex);
+            return 0;
+        }
     }
     
     public static void closeConnection(){
