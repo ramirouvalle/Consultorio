@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class Conexion{
     private static final String DB = "consultorio";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "root";
     private static final String HOST = "jdbc:mysql://localhost:3306/"+DB+"?connectTimeout=5000";
     private static final String DRIVERNAME = "com.mysql.jdbc.Driver"; 
     private static Connection conn = null;
@@ -65,6 +65,8 @@ public class Conexion{
         } catch (SQLException ex) {
             Tools.mensajeError("Error en el query: " + ex);
             return 0;
+        }finally{
+            Conexion.closeConnection();
         }
     }
     
@@ -74,6 +76,22 @@ public class Conexion{
                 conn.close();
         } catch (SQLException ex) {
             Tools.mensajeError("Problema al cerrar la conexion " + ex);
+        }
+    }
+    
+    public static void statusConnection(){
+        try {
+            if (conn != null) {
+                if (conn.isClosed()) {
+                    System.out.println("Conexion cerrada");
+                }else{
+                    System.out.println("Conexion abierta");
+                }
+            }else{
+                System.out.println("Conexion nula");
+            }                
+        } catch (SQLException ex) {
+            Tools.mensajeError("Error al consultar el estado de la conexion. "+ex);
         }
     }
 }

@@ -1,6 +1,5 @@
 package models;
 
-import java.sql.ResultSet;
 import sql.Conexion;
 
 /**
@@ -14,9 +13,15 @@ public class Patient {
     private String apellidoMaterno;
     private String genero;
     private String fechaNacimiento;
-    private String direccion;
     private String telefono;
-
+    private String celular;
+    private String RFC;
+    private String correo;
+    private String codigoPostal;
+    private String direccion;
+    private String responsable;
+    private String referenciado;
+    
     /**
      * Nuevo paciente
      * @param nombre
@@ -24,19 +29,30 @@ public class Patient {
      * @param apellidoMaterno
      * @param genero
      * @param fechaNacimiento
+     * @param telefono
+     * @param celular
+     * @param RFC
+     * @param correo
+     * @param codigoPostal
      * @param direccion
-     * @param telefono 
+     * @param responsable
+     * @param referenciado 
      */
-    public Patient(String nombre, String apellidoPaterno, String apellidoMaterno, String genero, String fechaNacimiento, String direccion, String telefono) {
+    public Patient(String nombre, String apellidoPaterno, String apellidoMaterno, String genero, String fechaNacimiento, String telefono, String celular, String RFC, String correo, String codigoPostal, String direccion, String responsable, String referenciado) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.genero = genero;
         this.fechaNacimiento = fechaNacimiento;
-        this.direccion = direccion;
         this.telefono = telefono;
+        this.celular = celular;
+        this.RFC = RFC;
+        this.correo = correo;
+        this.codigoPostal = codigoPostal;
+        this.direccion = direccion;
+        this.responsable = responsable;
+        this.referenciado = referenciado;
     }
-
     
     public int getId() {
         return id;
@@ -101,13 +117,63 @@ public class Patient {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-           
-    public void newPatient(Patient patient){
-        String query = "INSERT INTO pacientes (nombre, apePaterno, apeMaterno, genero, fechaNaciemiento, direccion, telefono) "
-                + "VALUES ('"+patient.getNombre()+"','"+patient.getApellidoPaterno()+"', '"+patient.getApellidoMaterno()+"', "
-                + " '"+patient.getFechaNacimiento()+"', '"+patient.getDireccion()+"', '"+patient.getTelefono()+"')";
-                
-        int result = Conexion.executeUpdate(query);
+
+    public String getCelular() {
+        return celular;
     }
-    
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    public String getRFC() {
+        return RFC;
+    }
+
+    public void setRFC(String RFC) {
+        this.RFC = RFC;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getCodigoPostal() {
+        return codigoPostal;
+    }
+
+    public void setCodigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
+    }
+
+    public String getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
+    }
+
+    public String getReferenciado() {
+        return referenciado;
+    }
+
+    public void setReferenciado(String referenciado) {
+        this.referenciado = referenciado;
+    }
+  
+    public int newPatient(Patient patient){
+        String query = "INSERT INTO pacientes (nombre, apePaterno, apeMaterno, genero, fechaNacimiento, telefono, celular,"
+                + "rfc, correo, codigoPostal, direccion, responsable, referenciado) "
+                + "VALUES ('"+patient.getNombre()+"', '"+patient.getApellidoPaterno()+"', '"+patient.getApellidoMaterno()+"', "
+                + " '"+patient.getGenero()+"', '"+patient.getFechaNacimiento()+"', '"+patient.getTelefono()+"', '"+patient.getCelular()+"', "
+                + " '"+patient.getRFC()+"', '"+patient.getCorreo()+"', '"+patient.getCodigoPostal()+"', '"+patient.getDireccion()+"', "
+                + " '"+patient.getResponsable()+"', '"+patient.getReferenciado()+"')";
+                
+        return Conexion.executeUpdate(query);
+    }   
 }

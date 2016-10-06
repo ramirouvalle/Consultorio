@@ -44,14 +44,24 @@ public class MainController implements Initializable {
     private TextArea txtDireccion;
     @FXML
     private TextField txtTelefono;
+    @FXML
+    private TextField txtCelular;
+    @FXML
+    private TextField txtCodPostal;
+    @FXML
+    private TextField txtRFC;
+    @FXML
+    private TextField txtCorreo;
+    @FXML
+    private TextField txtResponsable;
+    @FXML
+    private TextField txtReferenciado;
 
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        
-    }    
+    public void initialize(URL url, ResourceBundle rb) {}    
 
     /**
      * Al guardar el paciente en la base de datos
@@ -59,14 +69,22 @@ public class MainController implements Initializable {
      */
     @FXML
     private void btnGuardarPaciente_onclick(ActionEvent event) {
-        String nombre, apePat, apeMat, direccion, telefono, genero, fechaNacimiento;
+        String nombre, apePat, apeMat, genero, fechaNacimiento, telefono, celular, 
+                RFC, correo, codPostal, direccion, responsable, referenciado;
+        
         nombre = txtNombre.getText();
         apePat = txtApePat.getText();
         apeMat = txtApeMat.getText();
+        telefono = txtTelefono.getText(); 
+        celular = txtCelular.getText();
+        RFC = txtRFC.getText();
+        correo = txtCorreo.getText();
+        codPostal = txtCodPostal.getText();
         direccion = txtDireccion.getText();
-        telefono = txtTelefono.getText();        
+        responsable = txtResponsable.getText();
+        referenciado = txtReferenciado.getText();
         
-        if (!nombre.equals("") && !apePat.equals("") && !apeMat.equals("") && !direccion.equals("") && !telefono.equals("")) {
+        if (!nombre.equals("") && !apePat.equals("") && !apeMat.equals("") && !direccion.equals("")) {
             try{
                 fechaNacimiento = dpFecNacimiento.getValue().toString();
             }catch(NullPointerException ex){
@@ -75,7 +93,7 @@ public class MainController implements Initializable {
             }
 
             try{
-                Toggle toggle = rbMasculino.getToggleGroup().getSelectedToggle();
+                Toggle toggle = this.genero.getSelectedToggle();
                 RadioButton rbSelected = (RadioButton) toggle;
                 genero = rbSelected.getText();
             }catch(NullPointerException ex){
@@ -83,8 +101,13 @@ public class MainController implements Initializable {
                 return;
             }
             
-            Patient patient = new Patient(nombre, apePat, apeMat, genero, fechaNacimiento, direccion, telefono);
-            patient.newPatient(patient);
+            Patient patient = new Patient(nombre, apePat, apeMat, genero, fechaNacimiento, telefono, celular, RFC, correo, codPostal, direccion, responsable, referenciado);
+            int guardado = patient.newPatient(patient);
+            
+            if(guardado > 0){
+                Tools.mensajeInfo("El paciente se guardo correctamente.");
+                limpiarCampos();
+            }
         }else{
             Tools.mensajeInfo("Complete todo el formulario.");
         }
@@ -92,6 +115,22 @@ public class MainController implements Initializable {
 
     @FXML
     private void btnLimpiar_onclick(ActionEvent event) {
+        limpiarCampos();
     }
-    
+
+    private void limpiarCampos(){
+        txtNombre.setText("");
+        txtApePat.setText("");
+        txtApeMat.setText("");
+        txtCelular.setText("");
+        txtCodPostal.setText("");
+        txtCorreo.setText("");
+        txtDireccion.setText("");
+        txtRFC.setText("");
+        txtReferenciado.setText("");
+        txtResponsable.setText("");
+        txtTelefono.setText("");
+        dpFecNacimiento.getEditor().clear();
+        genero.selectToggle(null);
+    }
 }
