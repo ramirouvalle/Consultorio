@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane prefHeight="600.0" prefWidth="800.0" stylesheets="@../resources/css/main.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
+<TabPane prefHeight="600.0" prefWidth="1000.0" stylesheets="@../resources/css/main.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
   <tabs>
     <Tab text="%lblTab1">
          <content>
@@ -19,12 +19,12 @@
                            <content>
                               <AnchorPane>
                                  <children>
-                                    <GridPane layoutX="10.0" layoutY="50.0">
+                                    <GridPane layoutX="30.0" layoutY="55.0">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="249.0" minWidth="10.0" prefWidth="130.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="263.0" minWidth="10.0" prefWidth="206.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="263.0" minWidth="10.0" prefWidth="70.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" minWidth="10.0" prefWidth="110.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="263.0" minWidth="10.0" prefWidth="43.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" minWidth="10.0" prefWidth="137.0" />
                                           <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" minWidth="10.0" prefWidth="206.0" />
                                       </columnConstraints>
                                       <rowConstraints>
@@ -35,6 +35,7 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
@@ -67,32 +68,55 @@
                                           <TextField fx:id="txtCorreo" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                           <Label text="%lblCorreo" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                           <TextField fx:id="txtCodPostal" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                                          
                                           <Label text="%lblRFC" GridPane.columnIndex="3" />
-                                          
                                           <Label text="%lblResponsable" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                                          <Label text="%lblReferenciado" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                          <Label text="%lblReferenciado" GridPane.columnIndex="3" GridPane.rowIndex="6" />
                                           <TextArea fx:id="txtDireccion" prefHeight="100.0" prefWidth="206.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
                                           <TextField fx:id="txtResponsable" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                                          <TextField fx:id="txtReferenciado" GridPane.columnIndex="4" GridPane.rowIndex="5" />
-                                          <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="4" GridPane.rowIndex="7">
+                                          <TextField fx:id="txtRespParentezco" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                                          <TextField fx:id="txtReferenciado" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+                                          <TextArea fx:id="txtDatosEspeciales" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="7" />
+                                          <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="4" GridPane.rowIndex="8">
                                              <children>
                                                 <Button fx:id="btnGuardarPaciente" mnemonicParsing="false" onAction="#btnGuardarPaciente_onclick" text="%btnGuardarPaciente" />
                                                 <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#btnLimpiar_onclick" text="%btnLimpiar" />
                                              </children>
                                           </HBox>
+                                          <Label text="%lblResponsableParentezco" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                          <Label text="%lblDatosEspeciales" GridPane.columnIndex="3" GridPane.rowIndex="7" />
                                        </children>
                                     </GridPane>
-                                    <Label layoutX="10.0" layoutY="26.0" styleClass="title" stylesheets="@../resources/css/main.css" text="%lblTitleNewPaciente" />
+                                    <Label layoutX="30.0" layoutY="30.0" styleClass="title" stylesheets="@../resources/css/main.css" text="%lblTitleNewPaciente" />
                                  </children>
                               </AnchorPane>
                            </content>
                         </ScrollPane>
                      </content>
                 </Tab>
-                <Tab styleClass="subTab" text="%lblSubTab1_2">
+                <Tab fx:id="subTab1_2" onSelectionChanged="#subTab1_2_Select" styleClass="subTab" text="%lblSubTab1_2">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <HBox layoutX="30.0" layoutY="30.0">
+                                 <children>
+                                    <Label text="%lblBuscar" />
+                                    <TextField layoutX="10.0" layoutY="24.0" />
+                                    <Button mnemonicParsing="false" text="%btnBuscar" />
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="tbPacientes" layoutX="30.0" layoutY="65.0" prefHeight="200.0">
+                                <columns>
+                                  <TableColumn fx:id="colID" minWidth="40.0" prefWidth="50.0" text="%lblColID" />
+                                  <TableColumn fx:id="colNombre" minWidth="120.0" prefWidth="150.0" text="%lblColNombre" />
+                                    <TableColumn fx:id="colApellidos" minWidth="100.0" prefWidth="130.0" text="%lblColApellidos" />
+                                    <TableColumn fx:id="colDireccion" minWidth="120.0" prefWidth="200.0" text="%lblColDireccion" />
+                                    <TableColumn fx:id="colTelefono" minWidth="80.0" text="%lblColTelefono" />
+                                    <TableColumn fx:id="colCelular" minWidth="80.0" text="%lblColCelular" />
+                                    <TableColumn fx:id="colCorreo" minWidth="100.0" prefWidth="150.0" text="%lblColCorreo" />
+                                    <TableColumn fx:id="colRFC" minWidth="100.0" text="%lblColRFC" />
+                                </columns>
+                              </TableView>
+                           </children></AnchorPane>
                   </content>
                 </Tab>
               </tabs>

@@ -1,5 +1,10 @@
 package models;
 
+import consultorio.Tools;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import sql.Conexion;
 
 /**
@@ -20,10 +25,12 @@ public class Patient {
     private String codigoPostal;
     private String direccion;
     private String responsable;
+    private String responsableParentezco;
     private String referenciado;
+    private String datosEspeciales;
     
     /**
-     * Nuevo paciente
+     * Crear nuevo paciente
      * @param nombre
      * @param apellidoPaterno
      * @param apellidoMaterno
@@ -36,9 +43,11 @@ public class Patient {
      * @param codigoPostal
      * @param direccion
      * @param responsable
-     * @param referenciado 
+     * @param referenciado
+     * @param responsableParentezco
+     * @param datosEspeciales 
      */
-    public Patient(String nombre, String apellidoPaterno, String apellidoMaterno, String genero, String fechaNacimiento, String telefono, String celular, String RFC, String correo, String codigoPostal, String direccion, String responsable, String referenciado) {
+    public Patient(String nombre, String apellidoPaterno, String apellidoMaterno, String genero, String fechaNacimiento, String telefono, String celular, String RFC, String correo, String codigoPostal, String direccion, String responsable, String referenciado, String responsableParentezco, String datosEspeciales) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -52,6 +61,46 @@ public class Patient {
         this.direccion = direccion;
         this.responsable = responsable;
         this.referenciado = referenciado;
+        this.responsableParentezco = responsableParentezco;
+        this.datosEspeciales = datosEspeciales;
+    }
+
+    /**
+     * Paciente existente
+     * @param id
+     * @param nombre
+     * @param apellidoPaterno
+     * @param apellidoMaterno
+     * @param genero
+     * @param fechaNacimiento
+     * @param telefono
+     * @param celular
+     * @param RFC
+     * @param correo
+     * @param codigoPostal
+     * @param direccion
+     * @param responsable
+     * @param responsableParentezco
+     * @param referenciado
+     * @param datosEspeciales 
+     */
+    public Patient(int id, String nombre, String apellidoPaterno, String apellidoMaterno, String genero, String fechaNacimiento, String telefono, String celular, String RFC, String correo, String codigoPostal, String direccion, String responsable, String responsableParentezco, String referenciado, String datosEspeciales) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.genero = genero;
+        this.fechaNacimiento = fechaNacimiento;
+        this.telefono = telefono;
+        this.celular = celular;
+        this.RFC = RFC;
+        this.correo = correo;
+        this.codigoPostal = codigoPostal;
+        this.direccion = direccion;
+        this.responsable = responsable;
+        this.responsableParentezco = responsableParentezco;
+        this.referenciado = referenciado;
+        this.datosEspeciales = datosEspeciales;
     }
     
     public int getId() {
@@ -165,15 +214,71 @@ public class Patient {
     public void setReferenciado(String referenciado) {
         this.referenciado = referenciado;
     }
+
+    public String getResponsableParentezco() {
+        return responsableParentezco;
+    }
+
+    public void setResponsableParentezco(String responsableParentezco) {
+        this.responsableParentezco = responsableParentezco;
+    }
+
+    public String getDatosEspeciales() {
+        return datosEspeciales;
+    }
+
+    public void setDatosEspeciales(String datosEspeciales) {
+        this.datosEspeciales = datosEspeciales;
+    }
   
+    
     public int newPatient(Patient patient){
-        String query = "INSERT INTO pacientes (nombre, apePaterno, apeMaterno, genero, fechaNacimiento, telefono, celular,"
-                + "rfc, correo, codigoPostal, direccion, responsable, referenciado) "
+        String query = "INSERT INTO pacientes (pac_nombre, pac_apellidoPaterno, pac_apellidoMaterno, pac_fechaNacimiento, pac_genero, pac_telefono, pac_telefono_movil,"
+                + "pac_rfc, pac_correo, pac_codigo_postal, pac_direccion, pac_responsable, pac_referenciado, pac_responsable_parentezco, pac_datos_especiales) "
                 + "VALUES ('"+patient.getNombre()+"', '"+patient.getApellidoPaterno()+"', '"+patient.getApellidoMaterno()+"', "
-                + " '"+patient.getGenero()+"', '"+patient.getFechaNacimiento()+"', '"+patient.getTelefono()+"', '"+patient.getCelular()+"', "
+                + " '"+patient.getFechaNacimiento()+"', '"+patient.getGenero()+"', '"+patient.getTelefono()+"', '"+patient.getCelular()+"', "
                 + " '"+patient.getRFC()+"', '"+patient.getCorreo()+"', '"+patient.getCodigoPostal()+"', '"+patient.getDireccion()+"', "
-                + " '"+patient.getResponsable()+"', '"+patient.getReferenciado()+"')";
+                + " '"+patient.getResponsable()+"', '"+patient.getReferenciado()+"', '"+patient.getResponsableParentezco()+"', '"+patient.getDatosEspeciales()+"') ";
                 
         return Conexion.executeUpdate(query);
     }   
+    
+    public static List<Patient> listPatients(){
+        String query = "SELECT * FROM pacientes";
+        ResultSet rs = Conexion.executeQuery(query);
+        List<Patient> patientsList = new ArrayList<Patient>();
+        try {
+            while(rs.next()){
+                int id = rs.getInt("pac_id");
+                String nombre = rs.getString("pac_nombre");
+                String apePat = rs.getString("pac_apellidoPaterno");
+                String apeMat = rs.getString("pac_apellidoMaterno");
+                String fechaNac = rs.getString("pac_fechaNacimiento");
+                String genero = rs.getString("pac_genero");
+                String direccion = rs.getString("pac_direccion");
+                String codPostal = rs.getString("pac_codigo_postal");
+                String telefono = rs.getString("pac_telefono");
+                String celular = rs.getString("pac_telefono_movil");
+                String correo = rs.getString("pac_correo");
+                String responsable = rs.getString("pac_responsable");
+                String responsableParentezco = rs.getString("pac_responsable_parentezco");
+                String referenciado = rs.getString("pac_referenciado");
+                String rfc = rs.getString("pac_rfc");
+                String datosEspeciales = rs.getString("pac_datos_especiales");
+                
+                Patient p1 = new Patient(id, nombre, apePat, apeMat, genero, fechaNac, telefono, celular, rfc, correo, codPostal, direccion, responsable, responsableParentezco, referenciado, datosEspeciales);
+                patientsList.add(p1);
+            }
+            return patientsList;
+        } catch (SQLException ex) {
+            Tools.mensajeError("Error en la consulta. "+ex);
+            return null;
+        }catch (NullPointerException ex){
+            System.out.println("elol "+ex);
+            return null;
+        } 
+        finally{
+            Conexion.closeConnection();
+        }
+    }
 }
