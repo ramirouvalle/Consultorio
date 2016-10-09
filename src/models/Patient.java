@@ -243,6 +243,15 @@ public class Patient {
         return Conexion.executeUpdate(query);
     }   
     
+    public int modifyPatient(Patient patient){
+        String query = "UPDATE pacientes SET pac_nombre = '"+patient.getNombre()+"', pac_apellidoPaterno = '"+patient.getApellidoPaterno()+"', pac_apellidoMaterno = '"+patient.getApellidoMaterno()+"', "
+                + " pac_fechaNacimiento = '"+patient.getFechaNacimiento()+"', pac_genero = '"+patient.getGenero()+"', pac_telefono = '"+patient.getTelefono()+"', pac_telefono_movil = '"+patient.getCelular()+"', "
+                + " pac_rfc = '"+patient.getRFC()+"', pac_correo = '"+patient.getCorreo()+"', pac_codigo_postal = '"+patient.getCodigoPostal()+"', pac_direccion = '"+patient.getDireccion()+"', "
+                + " pac_responsable = '"+patient.getResponsable()+"', pac_referenciado = '"+patient.getReferenciado()+"', pac_responsable_parentezco = '"+patient.getResponsableParentezco()+"', pac_datos_especiales = '"+patient.getDatosEspeciales()+"' WHERE pac_id = "+patient.getId();
+                
+        return Conexion.executeUpdate(query);
+    } 
+    
     public static List<Patient> listPatients(){
         String query = "SELECT * FROM pacientes";
         ResultSet rs = Conexion.executeQuery(query);

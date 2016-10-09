@@ -2,10 +2,11 @@ package controllers;
 
 import consultorio.Tools;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,6 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -23,6 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import models.Patient;
 
 /**
@@ -91,6 +95,19 @@ public class MainController implements Initializable {
     private TableView<Patient> tbPacientes;
     @FXML
     private TableColumn<Patient, String> colApellidos;
+    @FXML
+    private TableColumn<Patient, String> colOpciones;
+    @FXML
+    private Tab tab1;
+    @FXML
+    private Tab subTab1_1;
+    @FXML
+    private Tab tab2;
+    @FXML
+    private Tab tab3;
+    @FXML
+    private TabPane tabPane_Pacientes;
+    private int idPatientModified = 0;
     /**
      * Initializes the controller class.
      */
@@ -137,13 +154,24 @@ public class MainController implements Initializable {
                 return;
             }
             
-            Patient patient = new Patient(nombre, apePat, apeMat, genero, fechaNacimiento, telefono, celular, RFC, correo, codPostal, direccion, responsable, referenciado, responsableParentezco, datosEspeciales);
-            int guardado = patient.newPatient(patient);
+            int guardado;
+            if (idPatientModified == 0) {
+                //Paciente nuevo
+                Patient patient = new Patient(nombre, apePat, apeMat, genero, fechaNacimiento, telefono, celular, RFC, correo, codPostal, direccion, responsable, referenciado, responsableParentezco, datosEspeciales);
+                guardado = patient.newPatient(patient);
+            }else{
+                //Paciente existente
+                Patient patient = new Patient(idPatientModified, nombre, apePat, apeMat, genero, fechaNacimiento, telefono, celular, RFC, correo, codPostal, direccion, responsable, referenciado, responsableParentezco, datosEspeciales);
+                guardado = patient.modifyPatient(patient);
+            }
             
             if(guardado > 0){
                 Tools.mensajeInfo("El paciente se guardo correctamente.");
                 limpiarCampos();
+            }else{
+                Tools.mensajeInfo("Problema al guardar el paciente.");
             }
+            idPatientModified = 0;
         }else{
             Tools.mensajeInfo("Complete todo el formulario.");
         }
@@ -176,7 +204,8 @@ public class MainController implements Initializable {
         txtRespParentezco.setText("");
         txtDatosEspeciales.setText("");
         dpFecNacimiento.getEditor().clear();
-        genero.selectToggle(null);
+        genero.selectToggle(null);        
+        idPatientModified = 0;
     }
 
     /**
@@ -205,6 +234,35 @@ public class MainController implements Initializable {
         colCelular.setCellValueFactory(new PropertyValueFactory<>("celular"));
         colCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
         colRFC.setCellValueFactory(new PropertyValueFactory<>("RFC"));
+        colOpciones.setCellFactory((TableColumn<Patient, String> param) -> {
+            TableCell<Patient, String> tc = new TableCell(){
+                @Override
+                protected void updateItem(Object item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        this.setGraphic(null);
+                        return;
+                    }
+                    Button btnEditar = new Button("Editar");
+                    btnEditar.setFocusTraversable(false);
+                    btnEditar.setOnAction((ActionEvent event) -> {
+                        Patient patient = (Patient) this.getTableView().getItems().get(this.getIndex());
+                        editPatient(patient);
+                    });
+                    
+                    Button btnBorrar = new Button("Borrar");
+                    btnBorrar.setFocusTraversable(false);
+                    btnBorrar.setOnAction((ActionEvent event) -> {
+                        //Borrar paciente
+                    });
+                    
+                    HBox hbox = new HBox(3);
+                    hbox.getChildren().addAll(btnEditar, btnBorrar);
+                    this.setGraphic(hbox);
+                }
+            };
+            return tc;
+        });
     }
     
     /**
@@ -216,5 +274,39 @@ public class MainController implements Initializable {
         for (Patient patient : patients) {
             listPatients.add(patient);
         }
+    }
+    
+    /**
+     * Editar los datos del paciente
+     * @param patient 
+     */
+    private void editPatient(Patient patient){
+        txtNombre.setText(patient.getNombre());
+        txtApePat.setText(patient.getApellidoPaterno());
+        txtApeMat.setText(patient.getApellidoMaterno());
+        if (patient.getGenero().equals(rbMasculino.getText())) {
+            genero.selectToggle(rbMasculino);
+        }else{
+            genero.selectToggle(rbFemenino);
+        }
+        try{
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate localDate = LocalDate.parse(patient.getFechaNacimiento(), formatter);
+            dpFecNacimiento.setValue(localDate);
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+        txtCelular.setText(patient.getCelular());
+        txtCodPostal.setText(patient.getCodigoPostal());
+        txtCorreo.setText(patient.getCorreo());
+        txtDatosEspeciales.setText(patient.getDatosEspeciales());
+        txtDireccion.setText(patient.getDireccion());
+        txtRFC.setText(patient.getRFC());
+        txtReferenciado.setText(patient.getReferenciado());
+        txtRespParentezco.setText(patient.getResponsableParentezco());
+        txtResponsable.setText(patient.getResponsable());
+        txtTelefono.setText(patient.getTelefono());
+        tabPane_Pacientes.getSelectionModel().select(subTab1_1);
+        idPatientModified = patient.getId();
     }
 }

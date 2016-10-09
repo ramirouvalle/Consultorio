@@ -6,8 +6,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -16,7 +14,7 @@ import java.util.logging.Logger;
 public class Conexion{
     private static final String DB = "consultorio";
     private static final String USER = "root";
-    private static final String PASSWORD = "root";
+    private static final String PASSWORD = "";
     private static final String HOST = "jdbc:mysql://localhost:3306/"+DB+"?connectTimeout=5000";
     private static final String DRIVERNAME = "com.mysql.jdbc.Driver"; 
     private static Connection conn = null;
