@@ -246,6 +246,7 @@ public class MainController implements Initializable {
                     Button btnEditar = new Button("Editar");
                     btnEditar.setFocusTraversable(false);
                     btnEditar.setOnAction((ActionEvent event) -> {
+                        //Modificar paciente
                         Patient patient = (Patient) this.getTableView().getItems().get(this.getIndex());
                         editPatient(patient);
                     });
@@ -254,6 +255,14 @@ public class MainController implements Initializable {
                     btnBorrar.setFocusTraversable(false);
                     btnBorrar.setOnAction((ActionEvent event) -> {
                         //Borrar paciente
+                        Patient patient = (Patient) this.getTableView().getItems().get(this.getIndex());
+                        int guardado = patient.deletePatient(patient);
+                        if (guardado > 0) {
+                            Tools.mensajeInfo("El paciente se ha eliminado correctamente.");
+                            listPatients.remove(patient);
+                        }else{
+                            Tools.mensajeInfo("No se ha podido eliminar el paciente.");
+                        }
                     });
                     
                     HBox hbox = new HBox(3);

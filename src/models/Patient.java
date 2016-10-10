@@ -290,4 +290,9 @@ public class Patient {
             Conexion.closeConnection();
         }
     }
+    
+    public int deletePatient(Patient patient){
+        String query = "DELETE FROM pacientes WHERE pac_id = "+patient.getId();
+        return Conexion.executeUpdate(query);
+    }
 }
