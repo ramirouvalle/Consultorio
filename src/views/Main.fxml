@@ -125,9 +125,22 @@
          </content>
     </Tab>
     <Tab fx:id="tab2" text="%lblTab2">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-      </content>
+         <content>
+            <TabPane prefHeight="200.0" prefWidth="200.0" styleClass="subTabPane" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab styleClass="subTab" text="%lblSubTab2_1">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+                <Tab styleClass="subTab" text="%lblSubTab2_2">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </content>
     </Tab>
       <Tab fx:id="tab3" text="%lblTab3">
         <content>
