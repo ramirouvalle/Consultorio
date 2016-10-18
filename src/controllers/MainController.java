@@ -27,6 +27,7 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javax.swing.JOptionPane;
 import models.Patient;
 
 /**
@@ -225,7 +226,7 @@ public class MainController implements Initializable {
      * Configura las columnas de la tabla de los pacientes
      */
     private void setColumns(){
-        colID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        //colID.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colApellidos.setCellValueFactory((TableColumn.CellDataFeatures<Patient, String> p) -> 
                 new SimpleStringProperty(p.getValue().getApellidoPaterno() + " " + p.getValue().getApellidoMaterno()));
@@ -244,6 +245,7 @@ public class MainController implements Initializable {
                         return;
                     }
                     Button btnEditar = new Button("Editar");
+                    btnEditar.getStyleClass().add("btnEdit");
                     btnEditar.setFocusTraversable(false);
                     btnEditar.setOnAction((ActionEvent event) -> {
                         //Modificar paciente
@@ -252,21 +254,31 @@ public class MainController implements Initializable {
                     });
                     
                     Button btnBorrar = new Button("Borrar");
+                    btnBorrar.getStyleClass().add("btnDelete");
                     btnBorrar.setFocusTraversable(false);
                     btnBorrar.setOnAction((ActionEvent event) -> {
                         //Borrar paciente
-                        Patient patient = (Patient) this.getTableView().getItems().get(this.getIndex());
-                        int guardado = patient.deletePatient(patient);
-                        if (guardado > 0) {
-                            Tools.mensajeInfo("El paciente se ha eliminado correctamente.");
-                            listPatients.remove(patient);
-                        }else{
-                            Tools.mensajeInfo("No se ha podido eliminar el paciente.");
+                        if (Tools.mensajeConfirmacion("¿Desea eliminar el paciente?")) {
+                            Patient patient = (Patient) this.getTableView().getItems().get(this.getIndex());
+                            int guardado = patient.deletePatient(patient);
+                            if (guardado > 0) {
+                                Tools.mensajeInfo("El paciente se ha eliminado correctamente.");
+                                listPatients.remove(patient);
+                            }else{
+                                Tools.mensajeInfo("No se ha podido eliminar el paciente.");
+                            }
                         }
                     });
                     
+                    Button btnCita = new Button("Cita");
+                    btnCita.getStyleClass().add("btnCita");
+                    btnCita.setFocusTraversable(false);
+                    btnCita.setOnAction((ActionEvent event) -> {
+                        //Agendar cita
+                    });
+                    
                     HBox hbox = new HBox(3);
-                    hbox.getChildren().addAll(btnEditar, btnBorrar);
+                    hbox.getChildren().addAll(btnEditar, btnBorrar, btnCita);
                     this.setGraphic(hbox);
                 }
             };

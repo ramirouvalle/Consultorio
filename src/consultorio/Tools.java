@@ -14,4 +14,13 @@ public class Tools {
     public static void mensajeInfo(String mensaje){
         JOptionPane.showMessageDialog(null, mensaje, "Información", JOptionPane.INFORMATION_MESSAGE);
     }
+    
+    public static boolean mensajeConfirmacion(String mensaje){
+        int option = JOptionPane.showConfirmDialog(null, mensaje, "Confirmación", JOptionPane.YES_NO_OPTION);
+        if (option == 0) {
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

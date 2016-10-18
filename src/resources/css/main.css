@@ -57,4 +57,34 @@
 .title{
     -fx-font-size: 1.3em;
 }
+
+/** Ver pacientes **/
+.btnDelete{
+    -fx-pref-width: 20px;
+    -fx-background-color: #F44336;
+    -fx-background-image: url("/resources/images/icon_delete.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-content-display: graphic-only;
+}
+
+.btnEdit{
+    -fx-pref-width: 20px;
+    -fx-background-color: #FF9800;
+    -fx-background-size: 20;
+    -fx-background-image: url("/resources/images/icon_edit.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-content-display: graphic-only;
+}
+
+.btnCita{
+    -fx-pref-width: 20px;
+    -fx-background-color: #4CAF50;
+    -fx-background-size: 20;
+    -fx-background-image: url("/resources/images/icon_appointment.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-content-display: graphic-only;
+}
 /*http://stackoverflow.com/questions/32394172/javafx-cant-remove-space-at-top-of-tabs*/

@@ -106,7 +106,6 @@
                               </HBox>
                               <TableView fx:id="tbPacientes" layoutX="30.0" layoutY="65.0" prefHeight="200.0">
                                 <columns>
-                                  <TableColumn fx:id="colID" minWidth="40.0" prefWidth="40.0" text="%lblColID" />
                                   <TableColumn fx:id="colNombre" minWidth="120.0" prefWidth="120.0" text="%lblColNombre" />
                                     <TableColumn fx:id="colApellidos" minWidth="100.0" prefWidth="125.0" text="%lblColApellidos" />
                                     <TableColumn fx:id="colDireccion" minWidth="120.0" prefWidth="200.0" text="%lblColDireccion" />
@@ -114,7 +113,7 @@
                                     <TableColumn fx:id="colCelular" minWidth="80.0" text="%lblColCelular" />
                                     <TableColumn fx:id="colCorreo" minWidth="100.0" prefWidth="150.0" text="%lblColCorreo" />
                                     <TableColumn fx:id="colRFC" minWidth="80.0" text="%lblColRFC" />
-                                    <TableColumn fx:id="colOpciones" />
+                                    <TableColumn fx:id="colOpciones" minWidth="80.0" prefWidth="90.0" />
                                 </columns>
                               </TableView>
                            </children></AnchorPane>
