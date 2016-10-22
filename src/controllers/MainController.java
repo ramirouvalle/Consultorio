@@ -4,9 +4,12 @@ import consultorio.Tools;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +17,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -76,8 +80,6 @@ public class MainController implements Initializable {
     @FXML
     private TextArea txtDatosEspeciales;
     @FXML
-    private TableColumn<Patient, Integer> colID;
-    @FXML
     private TableColumn<Patient, String> colNombre;
     @FXML
     private TableColumn<Patient, String> colDireccion;
@@ -109,11 +111,50 @@ public class MainController implements Initializable {
     @FXML
     private TabPane tabPane_Pacientes;
     private int idPatientModified = 0;
+    @FXML
+<<<<<<< HEAD
+    private ComboBox<String> combobox;
+    
+=======
+    private ComboBox<String> comboBox;
+>>>>>>> refs/remotes/origin/master
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {}    
+    public void initialize(URL url, ResourceBundle rb) {
+<<<<<<< HEAD
+        combobox.getItems().addAll("ariel","blanca","clara");
+        ObservableList<String> arr = combobox.getItems();
+        
+        combobox.getEditor().textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            for (int i = 0; i < arr.size(); i++) {
+                if (arr.get(i).matches("(.*)"+newValue+"(.*)")) {
+                    System.out.println("si "+arr.get(i));
+                }else{
+                    System.out.println("no");
+                    combobox.getItems().remove(combobox.getItems().get(i));
+=======
+        String[] list = {"ramiro alejandro", "alain", "adrian", "nestor", "rogelio","alan","ramiro perez"};
+        comboBox.getItems().addAll(list);
+        comboBox.getEditor().textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                try{
+                    if (!comboBox.getItems().isEmpty()) {
+                        comboBox.getItems().removeAll(list);
+                    }
+                    comboBox.getItems().addAll(list);
+                    if (!newValue.equals("")) {
+                        comboBox.getItems().removeIf(s -> !s.contains(newValue));
+                    }
+                }catch(Exception ex){
+                    System.out.println(ex);
+>>>>>>> refs/remotes/origin/master
+                }
+            }
+        });
+    }    
 
     /**
      * Boton que guarda un nuevo paciente en la base de datos
