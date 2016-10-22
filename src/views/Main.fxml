@@ -144,15 +144,8 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-<<<<<<< HEAD
-                                          <Label text="Label" />
-                                          <TextField GridPane.columnIndex="1" />
-                                          <Label text="Label" GridPane.rowIndex="1" />
-                                          <ComboBox fx:id="combobox" editable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-=======
                                           <Label text="%lblBuscar" />
                                           <ComboBox fx:id="comboBox" editable="true" prefHeight="25.0" prefWidth="250.0" GridPane.columnIndex="1" />
->>>>>>> refs/remotes/origin/master
                                        </children>
                                     </GridPane>
                                  </children>

@@ -112,29 +112,13 @@ public class MainController implements Initializable {
     private TabPane tabPane_Pacientes;
     private int idPatientModified = 0;
     @FXML
-<<<<<<< HEAD
-    private ComboBox<String> combobox;
-    
-=======
     private ComboBox<String> comboBox;
->>>>>>> refs/remotes/origin/master
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-<<<<<<< HEAD
-        combobox.getItems().addAll("ariel","blanca","clara");
-        ObservableList<String> arr = combobox.getItems();
-        
-        combobox.getEditor().textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            for (int i = 0; i < arr.size(); i++) {
-                if (arr.get(i).matches("(.*)"+newValue+"(.*)")) {
-                    System.out.println("si "+arr.get(i));
-                }else{
-                    System.out.println("no");
-                    combobox.getItems().remove(combobox.getItems().get(i));
-=======
         String[] list = {"ramiro alejandro", "alain", "adrian", "nestor", "rogelio","alan","ramiro perez"};
         comboBox.getItems().addAll(list);
         comboBox.getEditor().textProperty().addListener(new ChangeListener<String>() {
@@ -150,7 +134,6 @@ public class MainController implements Initializable {
                     }
                 }catch(Exception ex){
                     System.out.println(ex);
->>>>>>> refs/remotes/origin/master
                 }
             }
         });
