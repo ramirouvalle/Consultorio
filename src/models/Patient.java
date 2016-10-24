@@ -231,7 +231,11 @@ public class Patient {
         this.datosEspeciales = datosEspeciales;
     }
   
-    
+    /**
+     * Insertar un nuevo paciente en la base de datos.
+     * @param patient
+     * @return 
+     */
     public int newPatient(Patient patient){
         String query = "INSERT INTO pacientes (pac_nombre, pac_apellidoPaterno, pac_apellidoMaterno, pac_fechaNacimiento, pac_genero, pac_telefono, pac_telefono_movil,"
                 + "pac_rfc, pac_correo, pac_codigo_postal, pac_direccion, pac_responsable, pac_referenciado, pac_responsable_parentezco, pac_datos_especiales) "
@@ -243,6 +247,11 @@ public class Patient {
         return Conexion.executeUpdate(query);
     }   
     
+    /**
+     * Modificar un paciente.
+     * @param patient
+     * @return 
+     */
     public int modifyPatient(Patient patient){
         String query = "UPDATE pacientes SET pac_nombre = '"+patient.getNombre()+"', pac_apellidoPaterno = '"+patient.getApellidoPaterno()+"', pac_apellidoMaterno = '"+patient.getApellidoMaterno()+"', "
                 + " pac_fechaNacimiento = '"+patient.getFechaNacimiento()+"', pac_genero = '"+patient.getGenero()+"', pac_telefono = '"+patient.getTelefono()+"', pac_telefono_movil = '"+patient.getCelular()+"', "
@@ -252,6 +261,10 @@ public class Patient {
         return Conexion.executeUpdate(query);
     } 
     
+    /**
+     * Lista de todos los pacientes.
+     * @return 
+     */
     public static List<Patient> listPatients(){
         String query = "SELECT * FROM pacientes";
         ResultSet rs = Conexion.executeQuery(query);
@@ -291,8 +304,21 @@ public class Patient {
         }
     }
     
+    /**
+     * Eliminar un paciente de la base de datos.
+     * @param patient
+     * @return 
+     */
     public int deletePatient(Patient patient){
         String query = "DELETE FROM pacientes WHERE pac_id = "+patient.getId();
         return Conexion.executeUpdate(query);
+    }
+    
+    /**
+     * Retorna el nombre completo del paciente
+     * @return 
+     */
+    public String nombreCompleto(){
+        return this.getNombre() + " " + this.getApellidoPaterno() + " " + this.getApellidoMaterno();
     }
 }

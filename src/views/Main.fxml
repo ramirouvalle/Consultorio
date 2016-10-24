@@ -127,7 +127,7 @@
          <content>
             <TabPane prefHeight="200.0" prefWidth="200.0" styleClass="subTabPane" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab styleClass="subTab" text="%lblSubTab2_1">
+                <Tab fx:id="subTab2_1" onSelectionChanged="#subTab2_1_Select" styleClass="subTab" text="%lblSubTab2_1">
                   <content>
                         <ScrollPane layoutX="43.0" layoutY="79.0" prefHeight="200.0" prefWidth="200.0">
                           <content>
@@ -145,7 +145,7 @@
                                       </rowConstraints>
                                        <children>
                                           <Label text="%lblBuscar" />
-                                          <ComboBox fx:id="comboBox" editable="true" prefHeight="25.0" prefWidth="250.0" GridPane.columnIndex="1" />
+                                          <ComboBox fx:id="cbBuscarPaciente" editable="true" onAction="#cbBuscarPaciente_onAction" prefHeight="25.0" prefWidth="250.0" GridPane.columnIndex="1" />
                                        </children>
                                     </GridPane>
                                  </children>

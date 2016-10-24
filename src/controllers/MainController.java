@@ -4,7 +4,6 @@ import consultorio.Tools;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
@@ -31,7 +30,6 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javax.swing.JOptionPane;
 import models.Patient;
 
 /**
@@ -112,32 +110,14 @@ public class MainController implements Initializable {
     private TabPane tabPane_Pacientes;
     private int idPatientModified = 0;
     @FXML
-    private ComboBox<String> comboBox;
-    
+    private Tab subTab2_1;
+    @FXML
+    private ComboBox<String> cbBuscarPaciente;
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        String[] list = {"ramiro alejandro", "alain", "adrian", "nestor", "rogelio","alan","ramiro perez"};
-        comboBox.getItems().addAll(list);
-        comboBox.getEditor().textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                try{
-                    if (!comboBox.getItems().isEmpty()) {
-                        comboBox.getItems().removeAll(list);
-                    }
-                    comboBox.getItems().addAll(list);
-                    if (!newValue.equals("")) {
-                        comboBox.getItems().removeIf(s -> !s.contains(newValue));
-                    }
-                }catch(Exception ex){
-                    System.out.println(ex);
-                }
-            }
-        });
-    }    
+    public void initialize(URL url, ResourceBundle rb) {}    
 
     /**
      * Boton que guarda un nuevo paciente en la base de datos
@@ -203,7 +183,7 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Boton para limpiar los campos del paciente
+     * Boton para limpiar los campos del paciente de la pestaña de agregar paciente
      * @param event 
      */
     @FXML
@@ -212,7 +192,7 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Limpia los campos de la tab de nuevo paciente
+     * Limpia los campos de la tab de nuevo paciente de la pestaña de agregar paciente
      */
     private void limpiarCampos(){
         txtNombre.setText("");
@@ -353,5 +333,38 @@ public class MainController implements Initializable {
         txtTelefono.setText(patient.getTelefono());
         tabPane_Pacientes.getSelectionModel().select(subTab1_1);
         idPatientModified = patient.getId();
+    }
+
+    @FXML
+    private void subTab2_1_Select(Event event) {         
+        if (subTab2_1.isSelected()) {
+            List<Patient> list = Patient.listPatients();
+            if (cbBuscarPaciente.getItems().isEmpty()) {
+                cbBuscarPaciente.setPromptText("Nombre del paciente");
+                list.stream().forEach((patient) -> {
+                    cbBuscarPaciente.getItems().add(patient.nombreCompleto());
+                });
+            }
+            cbBuscarPaciente.getEditor().textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    try{
+//                        cbBuscarPaciente.getItems().clear();
+                        list.stream().forEach((patient) -> {
+                            cbBuscarPaciente.getItems().add(patient.nombreCompleto());
+                        });
+                        if (!newValue.equals("")) {
+                            cbBuscarPaciente.getItems().removeIf(patientNom -> !patientNom.contains(newValue));
+                        }
+                    }catch(Exception ex){
+                        System.out.println(ex);
+                    }
+                }
+            });
+        }
+    }
+
+    @FXML
+    private void cbBuscarPaciente_onAction(ActionEvent event) {
     }
 }
