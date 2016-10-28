@@ -18,6 +18,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -30,6 +32,7 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.util.Callback;
 import models.Patient;
 
 /**
@@ -112,7 +115,7 @@ public class MainController implements Initializable {
     @FXML
     private Tab subTab2_1;
     @FXML
-    private ComboBox<String> cbBuscarPaciente;
+    private ComboBox<Patient> cbBuscarPaciente;
     /**
      * Initializes the controller class.
      */
@@ -338,29 +341,50 @@ public class MainController implements Initializable {
     @FXML
     private void subTab2_1_Select(Event event) {         
         if (subTab2_1.isSelected()) {
-            List<Patient> list = Patient.listPatients();
-            if (cbBuscarPaciente.getItems().isEmpty()) {
-                cbBuscarPaciente.setPromptText("Nombre del paciente");
-                list.stream().forEach((patient) -> {
-                    cbBuscarPaciente.getItems().add(patient.nombreCompleto());
-                });
-            }
-            cbBuscarPaciente.getEditor().textProperty().addListener(new ChangeListener<String>() {
+            getListPatients();
+            cbBuscarPaciente.setCellFactory((ListView<Patient> param) -> new ListCell<Patient>(){
+                @Override
+                protected void updateItem(Patient item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setGraphic(null);
+                    } else {
+                        setText(item.nombreCompleto());
+                    }
+                }
+            });
+            cbBuscarPaciente.setPromptText("Nombre del paciente");
+            cbBuscarPaciente.setItems(listPatients);
+            cbBuscarPaciente.getEditor().textProperty().addListener(new ChangeListener<String>(){
                 @Override
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                     try{
-//                        cbBuscarPaciente.getItems().clear();
-                        list.stream().forEach((patient) -> {
-                            cbBuscarPaciente.getItems().add(patient.nombreCompleto());
-                        });
+                        cbBuscarPaciente.getItems().clear();
+                        cbBuscarPaciente.setItems(listPatients);
                         if (!newValue.equals("")) {
-                            cbBuscarPaciente.getItems().removeIf(patientNom -> !patientNom.contains(newValue));
+                            cbBuscarPaciente.getItems().removeIf(patientNom -> !patientNom.nombreCompleto().contains(newValue));
                         }
                     }catch(Exception ex){
                         System.out.println(ex);
                     }
                 }
             });
+//            cbBuscarPaciente.getEditor().textProperty().addListener(new ChangeListener<String>() {
+//                @Override
+//                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                    try{
+////                        cbBuscarPaciente.getItems().clear();
+//                        list.stream().forEach((patient) -> {
+//                            cbBuscarPaciente.getItems().add(patient.nombreCompleto());
+//                        });
+//                        if (!newValue.equals("")) {
+//                            cbBuscarPaciente.getItems().removeIf(patientNom -> !patientNom.contains(newValue));
+//                        }
+//                    }catch(Exception ex){
+//                        System.out.println(ex);
+//                    }
+//                }
+//            });
         }
     }
 
