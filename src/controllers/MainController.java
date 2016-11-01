@@ -342,6 +342,9 @@ public class MainController implements Initializable {
     private void subTab2_1_Select(Event event) {         
         if (subTab2_1.isSelected()) {
             getListPatients();
+            ObservableList<Patient> list = FXCollections.observableArrayList();
+            list.addAll(copyListPatients(listPatients));
+            
             cbBuscarPaciente.setCellFactory((ListView<Patient> param) -> new ListCell<Patient>(){
                 @Override
                 protected void updateItem(Patient item, boolean empty) {
@@ -353,14 +356,17 @@ public class MainController implements Initializable {
                     }
                 }
             });
+            
             cbBuscarPaciente.setPromptText("Nombre del paciente");
-            cbBuscarPaciente.setItems(listPatients);
+            cbBuscarPaciente.setItems(list);
+            
             cbBuscarPaciente.getEditor().textProperty().addListener(new ChangeListener<String>(){
                 @Override
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                     try{
                         cbBuscarPaciente.getItems().clear();
-                        cbBuscarPaciente.setItems(listPatients);
+                        list.addAll(copyListPatients(listPatients));
+                        cbBuscarPaciente.setItems(list);
                         if (!newValue.equals("")) {
                             cbBuscarPaciente.getItems().removeIf(patientNom -> !patientNom.nombreCompleto().contains(newValue));
                         }
@@ -390,5 +396,14 @@ public class MainController implements Initializable {
 
     @FXML
     private void cbBuscarPaciente_onAction(ActionEvent event) {
+    }
+    
+    private ObservableList<Patient> copyListPatients(ObservableList<Patient> listPatients){
+        ObservableList<Patient> listTemp = FXCollections.observableArrayList();
+        for (int i = 0; i < listPatients.size(); i++) {
+            Patient p = new Patient(listPatients.get(i).getId(), listPatients.get(i).getNombre(), listPatients.get(i).getApellidoPaterno(), listPatients.get(i).getApellidoMaterno(), listPatients.get(i).getGenero(), listPatients.get(i).getFechaNacimiento(), listPatients.get(i).getTelefono(), listPatients.get(i).getCelular(), listPatients.get(i).getRFC(), listPatients.get(i).getCorreo(), listPatients.get(i).getCodigoPostal(), listPatients.get(i).getDireccion(), listPatients.get(i).getResponsable(), listPatients.get(i).getResponsableParentezco(), listPatients.get(i).getReferenciado(), listPatients.get(i).getDatosEspeciales());
+            listTemp.add(p);
+        } 
+        return listTemp;
     }
 }
