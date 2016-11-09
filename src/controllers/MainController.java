@@ -4,6 +4,8 @@ import consultorio.Tools;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
@@ -338,6 +340,10 @@ public class MainController implements Initializable {
         idPatientModified = patient.getId();
     }
 
+    /**
+     * Al seleccionar la pestaña de Citas
+     * @param event 
+     */
     @FXML
     private void subTab2_1_Select(Event event) {         
         if (subTab2_1.isSelected()) {
@@ -354,7 +360,7 @@ public class MainController implements Initializable {
                 }
             });
             cbBuscarPaciente.setPromptText("Nombre del paciente");
-            cbBuscarPaciente.setItems(listPatients);
+//            cbBuscarPaciente.setItems(list);
             cbBuscarPaciente.getEditor().textProperty().addListener(new ChangeListener<String>(){
                 @Override
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -369,26 +375,33 @@ public class MainController implements Initializable {
                     }
                 }
             });
-//            cbBuscarPaciente.getEditor().textProperty().addListener(new ChangeListener<String>() {
-//                @Override
-//                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                    try{
-////                        cbBuscarPaciente.getItems().clear();
+            cbBuscarPaciente.getEditor().textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    try{
+                        
+                        cbBuscarPaciente.getItems().clear();
 //                        list.stream().forEach((patient) -> {
 //                            cbBuscarPaciente.getItems().add(patient.nombreCompleto());
 //                        });
-//                        if (!newValue.equals("")) {
-//                            cbBuscarPaciente.getItems().removeIf(patientNom -> !patientNom.contains(newValue));
-//                        }
-//                    }catch(Exception ex){
-//                        System.out.println(ex);
-//                    }
-//                }
-//            });
+                        if (!newValue.equals("")) {
+                            cbBuscarPaciente.getItems().removeIf(patientNom -> !patientNom.nombreCompleto().contains(newValue));
+                        }
+                    }catch(Exception ex){
+                        System.out.println(ex);
+                    }
+                }
+            });
         }
     }
 
     @FXML
     private void cbBuscarPaciente_onAction(ActionEvent event) {
     }
+    
+//    private ObservableList<Patient> copyPatientsList(ObservableList<Patient> patientList){
+//        for(Patient patient : patientList){
+//            
+//        }
+//    }
 }

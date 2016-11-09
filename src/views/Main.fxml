@@ -146,6 +146,10 @@
                                        <children>
                                           <Label text="%lblBuscar" />
                                           <ComboBox fx:id="cbBuscarPaciente" editable="true" onAction="#cbBuscarPaciente_onAction" prefHeight="25.0" prefWidth="250.0" GridPane.columnIndex="1" />
+                                          <Label text="%lblNomCompletoPaciente" GridPane.rowIndex="1" />
+                                          <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Label text="%lblFechaCita" GridPane.rowIndex="2" />
+                                          <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                        </children>
                                     </GridPane>
                                  </children>
