@@ -34,7 +34,8 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javafx.util.Callback;
+import models.Appointment;
+import models.Employee;
 import models.Patient;
 
 /**
@@ -118,6 +119,25 @@ public class MainController implements Initializable {
     private Tab subTab2_1;
     @FXML
     private ComboBox<Patient> cbBuscarPaciente;
+    @FXML
+    private DatePicker dpFechaCita;
+    @FXML
+    private TextField txtHoraCita;
+    @FXML
+    private TextField txtNomCompPaciente;
+    @FXML
+    private ComboBox<Employee> cbxDoctor;
+    @FXML
+    private TextField txtDireccionCita;
+    @FXML
+    private TextField txtResponsableCita;
+    private Patient patientCita;
+    @FXML
+    private Button btnGuardarCita;
+    @FXML
+    private TextField txtNombreDoctor;
+    private Employee doctorCita;
+    
     /**
      * Initializes the controller class.
      */
@@ -341,13 +361,20 @@ public class MainController implements Initializable {
     }
 
     /**
+<<<<<<< HEAD
      * Al seleccionar la pestaña de Citas
+=======
+     * Al seleccionar la pestaña de nueva cita
+>>>>>>> refs/remotes/origin/master
      * @param event 
      */
     @FXML
-    private void subTab2_1_Select(Event event) {         
+    private void subTab2_1_Select(Event event) {    
         if (subTab2_1.isSelected()) {
             getListPatients();
+            ObservableList<Patient> list = FXCollections.observableArrayList();
+            list.addAll(copyListPatients(listPatients));
+            
             cbBuscarPaciente.setCellFactory((ListView<Patient> param) -> new ListCell<Patient>(){
                 @Override
                 protected void updateItem(Patient item, boolean empty) {
@@ -359,49 +386,122 @@ public class MainController implements Initializable {
                     }
                 }
             });
+            
             cbBuscarPaciente.setPromptText("Nombre del paciente");
-//            cbBuscarPaciente.setItems(list);
             cbBuscarPaciente.getEditor().textProperty().addListener(new ChangeListener<String>(){
                 @Override
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                     try{
-                        cbBuscarPaciente.getItems().clear();
-                        cbBuscarPaciente.setItems(listPatients);
-                        if (!newValue.equals("")) {
-                            cbBuscarPaciente.getItems().removeIf(patientNom -> !patientNom.nombreCompleto().contains(newValue));
+                        if (newValue.contains("models") || newValue.equals("")) {
+                            return;
+                        }
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).nombreCompleto().contains(newValue)) {
+                                if (!cbBuscarPaciente.getItems().contains(list.get(i))) {
+                                    cbBuscarPaciente.getItems().add(list.get(i));
+                                }
+                            }else{
+                                if (cbBuscarPaciente.getItems().contains(list.get(i))) {
+                                    cbBuscarPaciente.getItems().remove(list.get(i));
+                                }
+                            }
                         }
                     }catch(Exception ex){
                         System.out.println(ex);
                     }
                 }
             });
-            cbBuscarPaciente.getEditor().textProperty().addListener(new ChangeListener<String>() {
+            
+            ObservableList<Employee> listDoctors = FXCollections.observableArrayList(Employee.listPatients());
+            cbxDoctor.setCellFactory((ListView<Employee> param) -> new ListCell<Employee>(){
                 @Override
-                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                    try{
-                        
-                        cbBuscarPaciente.getItems().clear();
-//                        list.stream().forEach((patient) -> {
-//                            cbBuscarPaciente.getItems().add(patient.nombreCompleto());
-//                        });
-                        if (!newValue.equals("")) {
-                            cbBuscarPaciente.getItems().removeIf(patientNom -> !patientNom.nombreCompleto().contains(newValue));
-                        }
-                    }catch(Exception ex){
-                        System.out.println(ex);
+                protected void updateItem(Employee item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setGraphic(null);
+                    } else {
+                        setText(item.nombreCompleto());
                     }
                 }
             });
+            cbxDoctor.setItems(listDoctors);
+        }else{
+            patientCita = null;
+            doctorCita = null;
+            txtNomCompPaciente.setText("");
+            txtDireccionCita.setText("");
+            txtResponsableCita.setText("");
+            txtNombreDoctor.setText("");
+            cbxDoctor.getItems().clear();
+            cbBuscarPaciente.getItems().clear();
+            cbxDoctor.getSelectionModel().clearSelection();
+            cbBuscarPaciente.getSelectionModel().clearSelection();
         }
     }
 
+    /**
+     * Al seleccionar un paciente del combobox
+     * @param event 
+     */
     @FXML
     private void cbBuscarPaciente_onAction(ActionEvent event) {
+        patientCita = cbBuscarPaciente.getSelectionModel().getSelectedItem();
+        if (patientCita != null) {
+            txtNomCompPaciente.setText(patientCita.nombreCompleto());
+            txtDireccionCita.setText(patientCita.getDireccion());
+            txtResponsableCita.setText(patientCita.getResponsable());
+        }
     }
     
-//    private ObservableList<Patient> copyPatientsList(ObservableList<Patient> patientList){
-//        for(Patient patient : patientList){
-//            
-//        }
-//    }
+    /**
+     * Copia la lista de pacientes y devuelve una nueva
+     * @param listPatients
+     * @return 
+     */
+    private ObservableList<Patient> copyListPatients(ObservableList<Patient> listPatients){
+        ObservableList<Patient> listTemp = FXCollections.observableArrayList();
+        for (int i = 0; i < listPatients.size(); i++) {
+            Patient p = new Patient(listPatients.get(i).getId(), listPatients.get(i).getNombre(), listPatients.get(i).getApellidoPaterno(), listPatients.get(i).getApellidoMaterno(), listPatients.get(i).getGenero(), listPatients.get(i).getFechaNacimiento(), listPatients.get(i).getTelefono(), listPatients.get(i).getCelular(), listPatients.get(i).getRFC(), listPatients.get(i).getCorreo(), listPatients.get(i).getCodigoPostal(), listPatients.get(i).getDireccion(), listPatients.get(i).getResponsable(), listPatients.get(i).getResponsableParentezco(), listPatients.get(i).getReferenciado(), listPatients.get(i).getDatosEspeciales());
+            listTemp.add(p);
+        } 
+        return listTemp;
+    }
+
+    /**
+     * Al presionar el boton de guardar cita
+     * @param event 
+     */
+    @FXML
+    private void btnGuardarCita_onclick(ActionEvent event) {
+        if (patientCita != null && doctorCita != null && txtHoraCita.getText().equals("")) {
+            int idPaciente = patientCita.getId();
+            int idDoctor = doctorCita.getId();
+            String fechaCita;
+            try{
+                fechaCita = dpFechaCita.getValue().toString();
+            }catch(NullPointerException ex){
+                Tools.mensajeInfo("Seleccione una fecha de nacimiento.");
+                return;
+            }
+            String horaCita = txtHoraCita.getText();
+            
+            Appointment cita = new Appointment(idPaciente, idDoctor, horaCita, fechaCita);
+            int guardado = cita.newAppointment(cita);
+            if (guardado > 0) {
+                Tools.mensajeInfo("La cita se guardo correctamente.");
+            }
+        }
+    }
+
+    /**
+     * Al seleccionar un doctor del combobox
+     * @param event 
+     */
+    @FXML
+    private void cbxDoctor_onAction(ActionEvent event) {
+        doctorCita = cbxDoctor.getSelectionModel().getSelectedItem();
+        if (doctorCita != null) {
+            txtNombreDoctor.setText(doctorCita.nombreCompleto());
+        }
+    }
 }

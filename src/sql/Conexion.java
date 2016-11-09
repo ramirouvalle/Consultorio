@@ -68,6 +68,9 @@ public class Conexion{
         }
     }
     
+    /**
+     * Cierra la conexion
+     */
     public static void closeConnection(){
         try {
             if (conn != null) 
@@ -77,6 +80,9 @@ public class Conexion{
         }
     }
     
+    /**
+     * Nos dice el estado de la conexion
+     */
     public static void statusConnection(){
         try {
             if (conn != null) {

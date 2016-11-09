@@ -1,20 +1,55 @@
 package models;
 
+import sql.Conexion;
+
 public class Appointment {
     private int id;
     private int idPatient;
     private int idDoctor;
-    private String houw;
+    private String hour;
     private String date;
 
-    public Appointment(int id, int idPatient, int idDoctor, String houw, String date) {
+    /**
+     * 
+     * @param idPatient
+     * @param idDoctor
+     * @param hour
+     * @param date 
+     */
+    public Appointment(int idPatient, int idDoctor, String hour, String date) {
+        this.idPatient = idPatient;
+        this.idDoctor = idDoctor;
+        this.hour = hour;
+        this.date = date;
+    }
+    
+    /**
+     * 
+     * @param id
+     * @param idPatient
+     * @param idDoctor
+     * @param hour
+     * @param date 
+     */
+    public Appointment(int id, int idPatient, int idDoctor, String hour, String date) {
         this.id = id;
         this.idPatient = idPatient;
         this.idDoctor = idDoctor;
-        this.houw = houw;
+        this.hour = hour;
         this.date = date;
     }
 
+    /**
+     * Guardar nueva cita
+     * @param ap
+     * @return 
+     */
+    public int newAppointment(Appointment ap){
+        String query = "INSERT INTO citas (pac_id, emp_id, cit_fecha, cit_hora)"
+                + "VALUES ("+ap.getIdPatient()+", "+ap.getIdDoctor()+", '"+ap.getDate()+"', '"+ap.getHour()+"')";
+        return Conexion.executeUpdate(query);
+    }   
+    
     public int getId() {
         return id;
     }
@@ -39,12 +74,12 @@ public class Appointment {
         this.idDoctor = idDoctor;
     }
 
-    public String getHouw() {
-        return houw;
+    public String getHour() {
+        return hour;
     }
 
-    public void setHouw(String houw) {
-        this.houw = houw;
+    public void setHour(String houw) {
+        this.hour = houw;
     }
 
     public String getDate() {
@@ -53,7 +88,5 @@ public class Appointment {
 
     public void setDate(String date) {
         this.date = date;
-    }
-    
-    
+    }    
 }

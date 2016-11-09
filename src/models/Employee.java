@@ -3,6 +3,8 @@ package models;
 import consultorio.Tools;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import sql.Conexion;
 
 public class Employee {
@@ -26,7 +28,20 @@ public class Employee {
         this.username = username;
         this.password = password;
     }
-
+    
+    /**
+     * 
+     * @param id
+     * @param name
+     * @param lastName
+     * @param direction
+     * @param phone
+     * @param cellular
+     * @param mail
+     * @param username
+     * @param password
+     * @param type 
+     */
     public Employee(int id, String name, String lastName, String direction, String phone, String cellular, String mail, String username, String password, String type) {
         this.id = id;
         this.name = name;
@@ -40,6 +55,75 @@ public class Employee {
         this.type = type;
     }
 
+        /**
+     * Iniciar sesión
+     * @param employee
+     * @return retorna si existe hace o no login el usuario
+     */
+    public Employee loginEmployee(Employee employee){
+        String query = "SELECT * FROM empleados WHERE emp_user = '"+employee.username+"' AND emp_password = '"+employee.password+"' ";
+        ResultSet rs = Conexion.executeQuery(query);
+        try {
+            if(rs.next()) {
+                int id_empleado = rs.getInt("emp_id");
+                String nombre = rs.getString("emp_nombre");
+                String apellido = rs.getString("emp_apellidos");
+                String direccion = rs.getString("emp_direccion");
+                String telefono = rs.getString("emp_telefono");
+                String celular = rs.getString("emp_telefono_movil");
+                String correo = rs.getString("emp_correo_electronico");
+                String user = rs.getString("emp_user");
+                String pass = rs.getString("emp_password");
+                String tipo = rs.getString("emp_tipo");
+                Employee e1 = new Employee(id_empleado, nombre, apellido, direccion, telefono, celular, correo, user, pass, tipo);
+                return e1;
+            }
+        } catch (SQLException ex) {
+            Tools.mensajeError("Problema al intentar logearse.");
+        } finally{
+            Conexion.closeConnection();
+        }
+        return null;
+    }
+    
+    /**
+     * Lista de empleados
+     * @return 
+     */
+    public static List<Employee> listPatients(){
+        String query = "SELECT * FROM empleados";
+        ResultSet rs = Conexion.executeQuery(query);
+        List<Employee> employeesList = new ArrayList<Employee>();
+        try {
+            while(rs.next()){
+                int id = rs.getInt("emp_id");
+                String nombre = rs.getString("emp_nombre");
+                String apellidos = rs.getString("emp_apellidos");
+                String direccion = rs.getString("emp_direccion");
+                String telefono = rs.getString("emp_telefono");
+                String celular = rs.getString("emp_telefono_movil");
+                String correo = rs.getString("emp_correo_electronico");
+                String tipo = rs.getString("emp_tipo");
+                String user = rs.getString("emp_user");
+                String pass = rs.getString("emp_password");
+                
+                Employee emp = new Employee(id, nombre, apellidos, direccion, telefono, celular, correo, user, pass, tipo);
+                employeesList.add(emp);
+            }
+            return employeesList;
+        }catch(SQLException ex){
+            Tools.mensajeError("Error en la consulta. "+ex);
+            return null;
+        }
+        finally{
+            Conexion.closeConnection();
+        }
+    } 
+    
+    public String nombreCompleto(){
+        return this.name + " " + this.lastName;
+    }
+    
     public int getId() {
         return id;
     }
@@ -118,36 +202,5 @@ public class Employee {
 
     public void setType(String type) {
         this.type = type;
-    }
-    
-    /**
-     * Iniciar sesión
-     * @param employee
-     * @return retorna si existe hace o no login el usuario
-     */
-    public Employee loginEmployee(Employee employee){
-        String query = "SELECT * FROM empleados WHERE emp_user = '"+employee.username+"' AND emp_password = '"+employee.password+"' ";
-        ResultSet rs = Conexion.executeQuery(query);
-        try {
-            if(rs.next()) {
-                int id_empleado = rs.getInt("emp_id");
-                String nombre = rs.getString("emp_nombre");
-                String apellido = rs.getString("emp_apellidos");
-                String direccion = rs.getString("emp_direccion");
-                String telefono = rs.getString("emp_telefono");
-                String celular = rs.getString("emp_telefono_movil");
-                String correo = rs.getString("emp_correo_electronico");
-                String user = rs.getString("emp_user");
-                String pass = rs.getString("emp_password");
-                String tipo = rs.getString("emp_tipo");
-                Employee e1 = new Employee(id_empleado, nombre, apellido, direccion, telefono, celular, correo, user, pass, tipo);
-                return e1;
-            }
-        } catch (SQLException ex) {
-            Tools.mensajeError("Problema al intentar logearse.");
-        } finally{
-            Conexion.closeConnection();
-        }
-        return null;
     }
 }
