@@ -4,8 +4,6 @@ import consultorio.Tools;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
@@ -139,9 +137,7 @@ public class MainController implements Initializable {
     private TextField txtNombreDoctor;
     private Employee doctorCita;
     @FXML
-    private TableView<?> tbCitas;
-    @FXML
-    private TableColumn<Patient, String> colPaciente;
+    private TableView<Appointment> tbCitas;
     @FXML
     private TableColumn<Appointment, String> colDoctor;
     @FXML
@@ -152,6 +148,8 @@ public class MainController implements Initializable {
     private TableColumn<Appointment, String> colOpcionesCita;
     @FXML
     private Tab subTab2_2;
+    @FXML
+    private TableColumn<Appointment, String> colPacienteCita;
     
     /**
      * Initializes the controller class.
@@ -375,11 +373,7 @@ public class MainController implements Initializable {
     }
 
     /**
-<<<<<<< HEAD
-     * Al seleccionar la pestaña de Citas
-=======
      * Al seleccionar la pestaña de nueva cita
->>>>>>> refs/remotes/origin/master
      * @param event 
      */
     @FXML
@@ -530,15 +524,22 @@ public class MainController implements Initializable {
         txtHoraCita.setText("");
     }
 
+    /**
+     * Al seleccionar la tab de ver todas las citas
+     * @param event 
+     */
     @FXML
     private void subTab2_2_Select(Event event) {
         if (subTab2_2.isSelected()) {
             getListAppointments();
-//            setColumns();
-//            tbPacientes.setItems(listPatients);
+            setColumnsAppointments();
+            tbCitas.setItems(listAppointments);
         }
     }
 
+    /**
+     * Crea una lista con las citas
+     */
     private void getListAppointments() {
         listAppointments.clear();
         List<Appointment> appointments = Appointment.listAppointments();
@@ -547,9 +548,60 @@ public class MainController implements Initializable {
         }
     }
     
+    /**
+     * Setea todas las columnas de la tabla de citas
+     */
     private void setColumnsAppointments(){
-        colPaciente.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colApellidos.setCellValueFactory((TableColumn.CellDataFeatures<Appointment, String> a) -> 
-                new SimpleStringProperty(Patient.getPatientByID(a.getValue().getId()).nombreCompleto()));
+        colPacienteCita.setCellValueFactory((TableColumn.CellDataFeatures<Appointment, String> a) -> 
+                new SimpleStringProperty(Patient.getPatientByID(a.getValue().getIdPatient()).nombreCompleto()));    
+        colDoctor.setCellValueFactory((TableColumn.CellDataFeatures<Appointment, String> a) ->
+                new SimpleStringProperty(Employee.getEmployee(a.getValue().getIdDoctor()).nombreCompleto()));        
+        colFecha.setCellValueFactory(new PropertyValueFactory<>("date"));        
+        colHora.setCellValueFactory(new PropertyValueFactory<>("hour"));
+        
+        colOpcionesCita.setCellFactory((TableColumn<Appointment, String> param) -> {
+            TableCell<Appointment, String> tc = new TableCell(){
+                @Override
+                protected void updateItem(Object item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        this.setGraphic(null);
+                        return;
+                    }
+                    
+                    Button btnConsultar = new Button("Consultar");
+                    btnConsultar.getStyleClass().add("btnConsultar");
+                    btnConsultar.setFocusTraversable(false);
+                    btnConsultar.setOnAction((ActionEvent event) -> {
+                        //Consultar paciente
+                    });
+                    
+                    Button btnModificarCita = new Button("Modificar");
+                    btnModificarCita.getStyleClass().add("btnEdit");
+                    btnModificarCita.setFocusTraversable(false);
+                    btnModificarCita.setOnAction((ActionEvent event) -> {
+                        //Consultar paciente
+                    });
+                    
+                    Button btnEliminarCita = new Button("Eliminar");
+                    btnEliminarCita.getStyleClass().add("btnDelete");
+                    btnEliminarCita.setFocusTraversable(false);
+                    btnEliminarCita.setOnAction((ActionEvent event) -> {
+                        Appointment cita = (Appointment) this.getTableView().getItems().get(this.getIndex());
+                        int result = Appointment.deleteAppointment(cita.getId());
+                        if (result > 0) {
+                            Tools.mensajeInfo("La cita se elimino correctamente.");
+                        }else{
+                            Tools.mensajeInfo("La cita no se pudo eliminar.");
+                        }
+                    });
+                    
+                    HBox hbox = new HBox(3);
+                    hbox.getChildren().addAll(btnConsultar, btnModificarCita, btnEliminarCita);        
+                    this.setGraphic(hbox);
+                }
+            }; 
+            return tc;
+        });
     }
 }

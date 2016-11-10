@@ -55,13 +55,17 @@ public class Appointment {
         return Conexion.executeUpdate(query);
     }   
     
+    /**
+     * Lista de todas las citas
+     * @return 
+     */
     public static List<Appointment> listAppointments() {
         String query = "SELECT * FROM citas ORDER BY cit_fecha, cit_hora";
         ResultSet rs = Conexion.executeQuery(query);
         List<Appointment> appointmentsList = new ArrayList<Appointment>();
         try{
             while(rs.next()){
-                Appointment appointment = new Appointment(rs.getInt("cit_id"), rs.getInt("pac_id"), rs.getInt("emp_id"), rs.getString("cit_fecha"), rs.getString("cit_hora"));
+                Appointment appointment = new Appointment(rs.getInt("cit_id"), rs.getInt("pac_id"), rs.getInt("emp_id"), rs.getString("cit_hora"), rs.getString("cit_fecha"));
                 appointmentsList.add(appointment);
             }
             return appointmentsList;
@@ -72,6 +76,16 @@ public class Appointment {
             Conexion.closeConnection();
         }
     }
+    
+    /**
+     * Elimina la cita que se indique
+     * @param id_cita
+     */
+    public static int deleteAppointment(int id_cita){
+        String query = "DELETE FROM citas WHERE cit_id = " + id_cita;
+        return Conexion.executeUpdate(query);
+    }
+    
     public int getId() {
         return id;
     }

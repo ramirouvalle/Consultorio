@@ -120,6 +120,34 @@ public class Employee {
         }
     } 
     
+    public static Employee getEmployee(int id_doctor){
+        String query = "SELECT * FROM empleados WHERE emp_id ="+id_doctor;
+        ResultSet rs = Conexion.executeQuery(query);
+        try{
+            while(rs.next()){
+                int id = rs.getInt("emp_id");
+                String nombre = rs.getString("emp_nombre");
+                String apellidos = rs.getString("emp_apellidos");
+                String direccion = rs.getString("emp_direccion");
+                String telefono = rs.getString("emp_telefono");
+                String celular = rs.getString("emp_telefono_movil");
+                String correo = rs.getString("emp_correo_electronico");
+                String tipo = rs.getString("emp_tipo");
+                String user = rs.getString("emp_user");
+                String pass = rs.getString("emp_password");
+                
+                Employee emp = new Employee(id, nombre, apellidos, direccion, telefono, celular, correo, user, pass, tipo);
+                return emp;
+            }
+        }catch(SQLException ex){
+            Tools.mensajeError(ex.toString());
+        }
+        finally{
+            Conexion.closeConnection();
+        }
+        return null;
+    }
+    
     public String nombreCompleto(){
         return this.name + " " + this.lastName;
     }

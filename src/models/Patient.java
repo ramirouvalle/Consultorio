@@ -108,7 +108,7 @@ public class Patient {
      * @param patient
      * @return 
      */
-    public int newPatient(Patient patient){
+    public static int newPatient(Patient patient){
         String query = "INSERT INTO pacientes (pac_nombre, pac_apellidoPaterno, pac_apellidoMaterno, pac_fechaNacimiento, pac_genero, pac_telefono, pac_telefono_movil,"
                 + "pac_rfc, pac_correo, pac_codigo_postal, pac_direccion, pac_responsable, pac_referenciado, pac_responsable_parentezco, pac_datos_especiales) "
                 + "VALUES ('"+patient.getNombre()+"', '"+patient.getApellidoPaterno()+"', '"+patient.getApellidoMaterno()+"', "
@@ -124,7 +124,7 @@ public class Patient {
      * @param patient
      * @return 
      */
-    public int modifyPatient(Patient patient){
+    public static int modifyPatient(Patient patient){
         String query = "UPDATE pacientes SET pac_nombre = '"+patient.getNombre()+"', pac_apellidoPaterno = '"+patient.getApellidoPaterno()+"', pac_apellidoMaterno = '"+patient.getApellidoMaterno()+"', "
                 + " pac_fechaNacimiento = '"+patient.getFechaNacimiento()+"', pac_genero = '"+patient.getGenero()+"', pac_telefono = '"+patient.getTelefono()+"', pac_telefono_movil = '"+patient.getCelular()+"', "
                 + " pac_rfc = '"+patient.getRFC()+"', pac_correo = '"+patient.getCorreo()+"', pac_codigo_postal = '"+patient.getCodigoPostal()+"', pac_direccion = '"+patient.getDireccion()+"', "
@@ -181,7 +181,7 @@ public class Patient {
      * @param patient
      * @return 
      */
-    public int deletePatient(Patient patient){
+    public static int deletePatient(Patient patient){
         String query = "DELETE FROM pacientes WHERE pac_id = "+patient.getId();
         return Conexion.executeUpdate(query);
     }
