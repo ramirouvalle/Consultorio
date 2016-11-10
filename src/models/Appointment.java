@@ -1,5 +1,10 @@
 package models;
 
+import consultorio.Tools;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import sql.Conexion;
 
 public class Appointment {
@@ -50,6 +55,23 @@ public class Appointment {
         return Conexion.executeUpdate(query);
     }   
     
+    public static List<Appointment> listAppointments() {
+        String query = "SELECT * FROM citas ORDER BY cit_fecha, cit_hora";
+        ResultSet rs = Conexion.executeQuery(query);
+        List<Appointment> appointmentsList = new ArrayList<Appointment>();
+        try{
+            while(rs.next()){
+                Appointment appointment = new Appointment(rs.getInt("cit_id"), rs.getInt("pac_id"), rs.getInt("emp_id"), rs.getString("cit_fecha"), rs.getString("cit_hora"));
+                appointmentsList.add(appointment);
+            }
+            return appointmentsList;
+        }catch(SQLException ex){
+            Tools.mensajeError("Error en la consulta. "+ex);
+            return null;
+        }finally{
+            Conexion.closeConnection();
+        }
+    }
     public int getId() {
         return id;
     }

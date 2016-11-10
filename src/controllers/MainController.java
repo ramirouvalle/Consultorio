@@ -98,6 +98,7 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Patient, String> colCorreo;
     private ObservableList<Patient> listPatients = FXCollections.observableArrayList();
+    private ObservableList<Appointment> listAppointments = FXCollections.observableArrayList();
     @FXML
     private TableView<Patient> tbPacientes;
     @FXML
@@ -137,6 +138,20 @@ public class MainController implements Initializable {
     @FXML
     private TextField txtNombreDoctor;
     private Employee doctorCita;
+    @FXML
+    private TableView<?> tbCitas;
+    @FXML
+    private TableColumn<Patient, String> colPaciente;
+    @FXML
+    private TableColumn<Appointment, String> colDoctor;
+    @FXML
+    private TableColumn<Appointment, String> colFecha;
+    @FXML
+    private TableColumn<Appointment, String> colHora;
+    @FXML
+    private TableColumn<Appointment, String> colOpcionesCita;
+    @FXML
+    private Tab subTab2_2;
     
     /**
      * Initializes the controller class.
@@ -255,7 +270,6 @@ public class MainController implements Initializable {
      * Configura las columnas de la tabla de los pacientes
      */
     private void setColumns(){
-        //colID.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colApellidos.setCellValueFactory((TableColumn.CellDataFeatures<Patient, String> p) -> 
                 new SimpleStringProperty(p.getValue().getApellidoPaterno() + " " + p.getValue().getApellidoMaterno()));
@@ -426,16 +440,7 @@ public class MainController implements Initializable {
             });
             cbxDoctor.setItems(listDoctors);
         }else{
-            patientCita = null;
-            doctorCita = null;
-            txtNomCompPaciente.setText("");
-            txtDireccionCita.setText("");
-            txtResponsableCita.setText("");
-            txtNombreDoctor.setText("");
-            cbxDoctor.getItems().clear();
-            cbBuscarPaciente.getItems().clear();
-            cbxDoctor.getSelectionModel().clearSelection();
-            cbBuscarPaciente.getSelectionModel().clearSelection();
+            limpiarTabCitas();
         }
     }
 
@@ -473,7 +478,7 @@ public class MainController implements Initializable {
      */
     @FXML
     private void btnGuardarCita_onclick(ActionEvent event) {
-        if (patientCita != null && doctorCita != null && txtHoraCita.getText().equals("")) {
+        if (patientCita != null && doctorCita != null && !txtHoraCita.getText().equals("")) {
             int idPaciente = patientCita.getId();
             int idDoctor = doctorCita.getId();
             String fechaCita;
@@ -489,6 +494,9 @@ public class MainController implements Initializable {
             int guardado = cita.newAppointment(cita);
             if (guardado > 0) {
                 Tools.mensajeInfo("La cita se guardo correctamente.");
+                limpiarTabCitas();
+            }else{
+                Tools.mensajeError("No se a podido guardar la cita.");
             }
         }
     }
@@ -503,5 +511,45 @@ public class MainController implements Initializable {
         if (doctorCita != null) {
             txtNombreDoctor.setText(doctorCita.nombreCompleto());
         }
+    }
+    /**
+     * Limpiar los campos de la tab agendar cita
+     */
+    private void limpiarTabCitas(){
+        patientCita = null;
+        doctorCita = null;
+        txtNomCompPaciente.setText("");
+        txtDireccionCita.setText("");
+        txtResponsableCita.setText("");
+        txtNombreDoctor.setText("");
+        cbxDoctor.getItems().clear();
+        cbBuscarPaciente.getItems().clear();
+        cbxDoctor.getSelectionModel().clearSelection();
+        cbBuscarPaciente.getSelectionModel().clearSelection();
+        dpFechaCita.getEditor().clear();
+        txtHoraCita.setText("");
+    }
+
+    @FXML
+    private void subTab2_2_Select(Event event) {
+        if (subTab2_2.isSelected()) {
+            getListAppointments();
+//            setColumns();
+//            tbPacientes.setItems(listPatients);
+        }
+    }
+
+    private void getListAppointments() {
+        listAppointments.clear();
+        List<Appointment> appointments = Appointment.listAppointments();
+        for (Appointment appointment : appointments) {
+            listAppointments.add(appointment);
+        }
+    }
+    
+    private void setColumnsAppointments(){
+        colPaciente.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colApellidos.setCellValueFactory((TableColumn.CellDataFeatures<Appointment, String> a) -> 
+                new SimpleStringProperty(Patient.getPatientByID(a.getValue().getId()).nombreCompleto()));
     }
 }

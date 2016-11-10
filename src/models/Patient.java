@@ -194,6 +194,36 @@ public class Patient {
         return this.getNombre() + " " + this.getApellidoPaterno() + " " + this.getApellidoMaterno();
     }
     
+    public static Patient getPatientByID(int id){
+        String query = "SELECT * FROM pacientes WHERE pac_id = " +id;
+        ResultSet rs = Conexion.executeQuery(query);
+        try{
+            while(rs.next()){
+                String nombre = rs.getString("pac_nombre");
+                String apePat = rs.getString("pac_apellidoPaterno");
+                String apeMat = rs.getString("pac_apellidoMaterno");
+                String fechaNac = rs.getString("pac_fechaNacimiento");
+                String genero = rs.getString("pac_genero");
+                String direccion = rs.getString("pac_direccion");
+                String codPostal = rs.getString("pac_codigo_postal");
+                String telefono = rs.getString("pac_telefono");
+                String celular = rs.getString("pac_telefono_movil");
+                String correo = rs.getString("pac_correo");
+                String responsable = rs.getString("pac_responsable");
+                String responsableParentezco = rs.getString("pac_responsable_parentezco");
+                String referenciado = rs.getString("pac_referenciado");
+                String rfc = rs.getString("pac_rfc");
+                String datosEspeciales = rs.getString("pac_datos_especiales");
+                
+                Patient patient = new Patient(id, nombre, apePat, apeMat, genero, fechaNac, telefono, celular, rfc, correo, codPostal, direccion, responsable, responsableParentezco, referenciado, datosEspeciales);
+                return patient;
+            }
+        }catch(SQLException ex){
+            Tools.mensajeError(ex.toString());
+        }
+        return null;
+    }
+    
     public int getId() {
         return id;
     }
