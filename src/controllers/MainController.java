@@ -653,6 +653,7 @@ public class MainController implements Initializable {
         });
     }
     
+
     /**
      * Setea los datos de la cita en la ventana de agendar citas
      * @param cita 
@@ -696,6 +697,6 @@ public class MainController implements Initializable {
         txtDoctorConsulta.setText(doctor.nombreCompleto());
         txtFechaConsulta.setText(cita.getDate());
         txtHoraConsultar.setText(cita.getHour());        
-        tabPane_Citas.getSelectionModel().select(subTab2_3);
+        tabPane_Citas.getSelectionModel().select(subTab2_3);     
     }
 }
