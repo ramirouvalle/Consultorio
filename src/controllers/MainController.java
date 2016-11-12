@@ -150,7 +150,33 @@ public class MainController implements Initializable {
     private Tab subTab2_2;
     @FXML
     private TableColumn<Appointment, String> colPacienteCita;
-    
+    @FXML
+    private TabPane tabPane_Citas;
+    @FXML
+    private Tab subTab2_3;
+    private int idAppointmentEdit = 0;
+    @FXML
+    private TextField txtNomPacConsulta;
+    @FXML
+    private TextField txtGeneroConsulta;
+    @FXML
+    private TextField txtFechaNacConsulta;
+    @FXML
+    private TextField txtDireccionConsulta;
+    @FXML
+    private TextField txtTelefonoConsulta;
+    @FXML
+    private TextField txtCelularConsulta;
+    @FXML
+    private TextField txtResponsableConsulta;
+    @FXML
+    private TextField txtDatosEspecialesConsulta;
+    @FXML
+    private TextField txtDoctorConsulta;
+    @FXML
+    private TextField txtFechaConsulta;
+    @FXML
+    private TextField txtHoraConsultar;
     /**
      * Initializes the controller class.
      */
@@ -386,11 +412,15 @@ public class MainController implements Initializable {
             cbBuscarPaciente.setCellFactory((ListView<Patient> param) -> new ListCell<Patient>(){
                 @Override
                 protected void updateItem(Patient item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setGraphic(null);
-                    } else {
-                        setText(item.nombreCompleto());
+                    try{
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            setText(item.nombreCompleto());
+                        }
+                    }catch(Exception ex){
+                        System.out.println(ex + "X");
                     }
                 }
             });
@@ -415,7 +445,7 @@ public class MainController implements Initializable {
                             }
                         }
                     }catch(Exception ex){
-                        System.out.println(ex);
+                        System.out.println(ex + "y");
                     }
                 }
             });
@@ -424,11 +454,15 @@ public class MainController implements Initializable {
             cbxDoctor.setCellFactory((ListView<Employee> param) -> new ListCell<Employee>(){
                 @Override
                 protected void updateItem(Employee item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setGraphic(null);
-                    } else {
-                        setText(item.nombreCompleto());
+                    try{
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            setText(item.nombreCompleto());
+                        }
+                    }catch(Exception ex){
+                        System.out.println(ex);
                     }
                 }
             });
@@ -444,11 +478,15 @@ public class MainController implements Initializable {
      */
     @FXML
     private void cbBuscarPaciente_onAction(ActionEvent event) {
-        patientCita = cbBuscarPaciente.getSelectionModel().getSelectedItem();
-        if (patientCita != null) {
-            txtNomCompPaciente.setText(patientCita.nombreCompleto());
-            txtDireccionCita.setText(patientCita.getDireccion());
-            txtResponsableCita.setText(patientCita.getResponsable());
+        try{
+            patientCita = cbBuscarPaciente.getSelectionModel().getSelectedItem();
+            if (patientCita != null) {
+                txtNomCompPaciente.setText(patientCita.nombreCompleto());
+                txtDireccionCita.setText(patientCita.getDireccion());
+                txtResponsableCita.setText(patientCita.getResponsable());
+            }
+        }catch(Exception ex){
+            System.out.println(ex);
         }
     }
     
@@ -483,15 +521,22 @@ public class MainController implements Initializable {
                 return;
             }
             String horaCita = txtHoraCita.getText();
+            int guardado;
+            if (idAppointmentEdit == 0) {
+                Appointment cita = new Appointment(idPaciente, idDoctor, horaCita, fechaCita);
+                guardado = Appointment.newAppointment(cita);
+            }else{
+                Appointment cita = new Appointment(idAppointmentEdit, idPaciente, idDoctor, horaCita, fechaCita);
+                guardado = Appointment.modifyAppointment(cita);
+            }
             
-            Appointment cita = new Appointment(idPaciente, idDoctor, horaCita, fechaCita);
-            int guardado = cita.newAppointment(cita);
             if (guardado > 0) {
                 Tools.mensajeInfo("La cita se guardo correctamente.");
                 limpiarTabCitas();
             }else{
                 Tools.mensajeError("No se a podido guardar la cita.");
             }
+            idAppointmentEdit = 0;
         }
     }
 
@@ -573,14 +618,16 @@ public class MainController implements Initializable {
                     btnConsultar.getStyleClass().add("btnConsultar");
                     btnConsultar.setFocusTraversable(false);
                     btnConsultar.setOnAction((ActionEvent event) -> {
-                        //Consultar paciente
+                        Appointment cita = (Appointment) this.getTableView().getItems().get(this.getIndex());
+                        consultarCita(cita);
                     });
                     
                     Button btnModificarCita = new Button("Modificar");
                     btnModificarCita.getStyleClass().add("btnEdit");
                     btnModificarCita.setFocusTraversable(false);
                     btnModificarCita.setOnAction((ActionEvent event) -> {
-                        //Consultar paciente
+                        Appointment cita = (Appointment) this.getTableView().getItems().get(this.getIndex());
+                        editAppointment(cita);
                     });
                     
                     Button btnEliminarCita = new Button("Eliminar");
@@ -591,6 +638,7 @@ public class MainController implements Initializable {
                         int result = Appointment.deleteAppointment(cita.getId());
                         if (result > 0) {
                             Tools.mensajeInfo("La cita se elimino correctamente.");
+                            listAppointments.remove(cita);
                         }else{
                             Tools.mensajeInfo("La cita no se pudo eliminar.");
                         }
@@ -603,5 +651,51 @@ public class MainController implements Initializable {
             }; 
             return tc;
         });
+    }
+    
+    /**
+     * Setea los datos de la cita en la ventana de agendar citas
+     * @param cita 
+     */
+    public void editAppointment(Appointment cita){
+        patientCita = Patient.getPatientByID(cita.getIdPatient());
+        doctorCita = Employee.getEmployee(cita.getIdDoctor());
+        txtNomCompPaciente.setText(patientCita.nombreCompleto());
+        txtDireccionCita.setText(patientCita.getDireccion());
+        txtResponsableCita.setText(patientCita.getResponsable());
+        txtNombreDoctor.setText(doctorCita.nombreCompleto());
+        txtHoraCita.setText(cita.getHour());
+        
+        try{
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate localDate = LocalDate.parse(cita.getDate(), formatter);
+            dpFechaCita.setValue(localDate);
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+        
+        tabPane_Citas.getSelectionModel().select(subTab2_1);
+        cbxDoctor.getItems().clear();
+        cbBuscarPaciente.getItems().clear();
+        cbxDoctor.getSelectionModel().clearSelection();
+        cbBuscarPaciente.getSelectionModel().clearSelection();     
+        idAppointmentEdit = patientCita.getId();
+    }
+    
+    public void consultarCita(Appointment cita){
+        Patient patient = Patient.getPatientByID(cita.getIdPatient());
+        Employee doctor = Employee.getEmployee(cita.getIdDoctor());
+        txtNomPacConsulta.setText(patient.nombreCompleto());
+        txtGeneroConsulta.setText(patient.getGenero());
+        txtFechaNacConsulta.setText(patient.getFechaNacimiento());
+        txtDireccionConsulta.setText(patient.getDireccion());
+        txtTelefonoConsulta.setText(patient.getTelefono());
+        txtCelularConsulta.setText(patient.getCelular());
+        txtResponsableConsulta.setText(patient.getResponsable());
+        txtDatosEspecialesConsulta.setText(patient.getDatosEspeciales());
+        txtDoctorConsulta.setText(doctor.nombreCompleto());
+        txtFechaConsulta.setText(cita.getDate());
+        txtHoraConsultar.setText(cita.getHour());        
+        tabPane_Citas.getSelectionModel().select(subTab2_3);
     }
 }

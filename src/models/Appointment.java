@@ -49,7 +49,7 @@ public class Appointment {
      * @param ap
      * @return 
      */
-    public int newAppointment(Appointment ap){
+    public static int newAppointment(Appointment ap){
         String query = "INSERT INTO citas (pac_id, emp_id, cit_fecha, cit_hora)"
                 + "VALUES ("+ap.getIdPatient()+", "+ap.getIdDoctor()+", '"+ap.getDate()+"', '"+ap.getHour()+"')";
         return Conexion.executeUpdate(query);
@@ -83,6 +83,12 @@ public class Appointment {
      */
     public static int deleteAppointment(int id_cita){
         String query = "DELETE FROM citas WHERE cit_id = " + id_cita;
+        return Conexion.executeUpdate(query);
+    }
+    
+    public static int modifyAppointment(Appointment cita){
+        String query = "UPDATE citas SET pac_id = "+cita.getIdPatient()+", emp_id = "+cita.getIdDoctor()+", cit_hora = '"+cita.getHour()+"', cit_fecha = '"+cita.getDate()+"' "
+                + "WHERE cit_id = "+cita.getId();
         return Conexion.executeUpdate(query);
     }
     
