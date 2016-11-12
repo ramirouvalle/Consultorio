@@ -150,6 +150,10 @@ public class MainController implements Initializable {
     private Tab subTab2_2;
     @FXML
     private TableColumn<Appointment, String> colPacienteCita;
+    @FXML
+    private TabPane tabPane_Citas;
+    @FXML
+    private Tab subTab2_3;
     
     /**
      * Initializes the controller class.
@@ -386,11 +390,15 @@ public class MainController implements Initializable {
             cbBuscarPaciente.setCellFactory((ListView<Patient> param) -> new ListCell<Patient>(){
                 @Override
                 protected void updateItem(Patient item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setGraphic(null);
-                    } else {
-                        setText(item.nombreCompleto());
+                    try{
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            setText(item.nombreCompleto());
+                        }
+                    }catch(Exception ex){
+                        System.out.println(ex + "X");
                     }
                 }
             });
@@ -415,7 +423,7 @@ public class MainController implements Initializable {
                             }
                         }
                     }catch(Exception ex){
-                        System.out.println(ex);
+                        System.out.println(ex + "y");
                     }
                 }
             });
@@ -424,11 +432,15 @@ public class MainController implements Initializable {
             cbxDoctor.setCellFactory((ListView<Employee> param) -> new ListCell<Employee>(){
                 @Override
                 protected void updateItem(Employee item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setGraphic(null);
-                    } else {
-                        setText(item.nombreCompleto());
+                    try{
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            setText(item.nombreCompleto());
+                        }
+                    }catch(Exception ex){
+                        System.out.println(ex);
                     }
                 }
             });
@@ -444,11 +456,15 @@ public class MainController implements Initializable {
      */
     @FXML
     private void cbBuscarPaciente_onAction(ActionEvent event) {
-        patientCita = cbBuscarPaciente.getSelectionModel().getSelectedItem();
-        if (patientCita != null) {
-            txtNomCompPaciente.setText(patientCita.nombreCompleto());
-            txtDireccionCita.setText(patientCita.getDireccion());
-            txtResponsableCita.setText(patientCita.getResponsable());
+        try{
+            patientCita = cbBuscarPaciente.getSelectionModel().getSelectedItem();
+            if (patientCita != null) {
+                txtNomCompPaciente.setText(patientCita.nombreCompleto());
+                txtDireccionCita.setText(patientCita.getDireccion());
+                txtResponsableCita.setText(patientCita.getResponsable());
+            }
+        }catch(Exception ex){
+            System.out.println(ex);
         }
     }
     
@@ -580,7 +596,8 @@ public class MainController implements Initializable {
                     btnModificarCita.getStyleClass().add("btnEdit");
                     btnModificarCita.setFocusTraversable(false);
                     btnModificarCita.setOnAction((ActionEvent event) -> {
-                        //Consultar paciente
+                        Appointment cita = (Appointment) this.getTableView().getItems().get(this.getIndex());
+                        editAppointment(cita);
                     });
                     
                     Button btnEliminarCita = new Button("Eliminar");
@@ -591,6 +608,7 @@ public class MainController implements Initializable {
                         int result = Appointment.deleteAppointment(cita.getId());
                         if (result > 0) {
                             Tools.mensajeInfo("La cita se elimino correctamente.");
+                            listAppointments.remove(cita);
                         }else{
                             Tools.mensajeInfo("La cita no se pudo eliminar.");
                         }
@@ -603,5 +621,29 @@ public class MainController implements Initializable {
             }; 
             return tc;
         });
+    }
+    
+    public void editAppointment(Appointment cita){
+        patientCita = Patient.getPatientByID(cita.getIdPatient());
+        doctorCita = Employee.getEmployee(cita.getIdDoctor());
+        txtNomCompPaciente.setText(patientCita.nombreCompleto());
+        txtDireccionCita.setText(patientCita.getDireccion());
+        txtResponsableCita.setText(patientCita.getResponsable());
+        txtNombreDoctor.setText(doctorCita.nombreCompleto());
+        txtHoraCita.setText(cita.getHour());
+        
+        try{
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate localDate = LocalDate.parse(cita.getDate(), formatter);
+            dpFechaCita.setValue(localDate);
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+        
+        tabPane_Citas.getSelectionModel().select(subTab2_1);
+        cbxDoctor.getItems().clear();
+        cbBuscarPaciente.getItems().clear();
+        cbxDoctor.getSelectionModel().clearSelection();
+        cbBuscarPaciente.getSelectionModel().clearSelection();       
     }
 }
