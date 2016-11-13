@@ -4,6 +4,7 @@ import consultorio.Tools;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,6 +21,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -33,6 +35,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import models.Appointment;
+import models.Consult;
 import models.Employee;
 import models.Patient;
 
@@ -110,8 +113,6 @@ public class MainController implements Initializable {
     @FXML
     private Tab tab2;
     @FXML
-    private Tab tab3;
-    @FXML
     private TabPane tabPane_Pacientes;
     private int idPatientModified = 0;
     @FXML
@@ -177,11 +178,65 @@ public class MainController implements Initializable {
     private TextField txtFechaConsulta;
     @FXML
     private TextField txtHoraConsultar;
+    @FXML
+    private Button btnGuardarConsulta;
+    @FXML
+    private TextArea txtIndicacionesConsulta;
+    private Appointment citaConsulta;
+    @FXML
+    private Button btnGuardarEmployee;
+    @FXML
+    private TextField txtNombreEmpleado;
+    @FXML
+    private TextField txtApellidosEmpleado;
+    @FXML
+    private TextField txtDireccionEmpleado;
+    @FXML
+    private TextField txtTelefonoEmpleado;
+    @FXML
+    private TextField txtCelularEmpleado;
+    @FXML
+    private TextField txtCorreoEmpleado;
+    @FXML
+    private TextField txtUsuarioEmpleado;
+    @FXML
+    private PasswordField pwClaveEmpleado;
+    @FXML
+    private PasswordField pwClave2Empleado;
+    @FXML
+    private ComboBox<String> cbEmpleado;
+    @FXML
+    private TableColumn<Employee, String> colEmpleado;
+    @FXML
+    private TableColumn<Employee, String> colDireccionEmpleado;
+    @FXML
+    private TableColumn<Employee, String> colTelefonoEmpleado;
+    @FXML
+    private TableColumn<Employee, String> colCelularEmpleado;
+    @FXML
+    private TableColumn<Employee, String> colCorreoEmpleado;
+    @FXML
+    private TableColumn<Employee, String> colOcupacionEmpleado;
+    @FXML
+    private TableColumn<Employee, String> colOpcionesEmpleado;
+    @FXML
+    private TableView<Employee> tbEmpleado;
+    @FXML
+    private Tab subTab3_1;
+    @FXML
+    private Tab subTab3_2;
+    private Employee empleadoEditando;
+    private ObservableList<Employee> listDoctorsx = FXCollections.observableArrayList();
+    @FXML
+    private TabPane tabPane_Empleados;
+    
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {}    
+    public void initialize(URL url, ResourceBundle rb) {
+        cbEmpleado.setItems(FXCollections.observableArrayList("Asistente","Doctor"));
+    }    
 
     /**
      * Boton que guarda un nuevo paciente en la base de datos
@@ -450,7 +505,7 @@ public class MainController implements Initializable {
                 }
             });
             
-            ObservableList<Employee> listDoctors = FXCollections.observableArrayList(Employee.listPatients());
+            ObservableList<Employee> listDoctors = FXCollections.observableArrayList(Employee.listEmployees());
             cbxDoctor.setCellFactory((ListView<Employee> param) -> new ListCell<Employee>(){
                 @Override
                 protected void updateItem(Employee item, boolean empty) {
@@ -684,19 +739,173 @@ public class MainController implements Initializable {
     }
     
     public void consultarCita(Appointment cita){
-        Patient patient = Patient.getPatientByID(cita.getIdPatient());
-        Employee doctor = Employee.getEmployee(cita.getIdDoctor());
-        txtNomPacConsulta.setText(patient.nombreCompleto());
-        txtGeneroConsulta.setText(patient.getGenero());
-        txtFechaNacConsulta.setText(patient.getFechaNacimiento());
-        txtDireccionConsulta.setText(patient.getDireccion());
-        txtTelefonoConsulta.setText(patient.getTelefono());
-        txtCelularConsulta.setText(patient.getCelular());
-        txtResponsableConsulta.setText(patient.getResponsable());
-        txtDatosEspecialesConsulta.setText(patient.getDatosEspeciales());
-        txtDoctorConsulta.setText(doctor.nombreCompleto());
+        Patient patientConsult = Patient.getPatientByID(cita.getIdPatient());
+        Employee doctorConsult = Employee.getEmployee(cita.getIdDoctor());
+        citaConsulta = cita;
+        txtNomPacConsulta.setText(patientConsult.nombreCompleto());
+        txtGeneroConsulta.setText(patientConsult.getGenero());
+        txtFechaNacConsulta.setText(patientConsult.getFechaNacimiento());
+        txtDireccionConsulta.setText(patientConsult.getDireccion());
+        txtTelefonoConsulta.setText(patientConsult.getTelefono());
+        txtCelularConsulta.setText(patientConsult.getCelular());
+        txtResponsableConsulta.setText(patientConsult.getResponsable());
+        txtDatosEspecialesConsulta.setText(patientConsult.getDatosEspeciales());
+        txtDoctorConsulta.setText(doctorConsult.nombreCompleto());
         txtFechaConsulta.setText(cita.getDate());
         txtHoraConsultar.setText(cita.getHour());        
         tabPane_Citas.getSelectionModel().select(subTab2_3);     
+    }
+
+    @FXML
+    private void btnGuardarConsulta_onclick(ActionEvent event) {
+        if (!txtIndicacionesConsulta.getText().equals("")) {
+            String indicaciones = txtIndicacionesConsulta.getText();
+            int id_cita = citaConsulta.getId();
+            Consult consulta = new Consult(id_cita, indicaciones);
+            int result = Consult.saveConsult(consulta);
+            if (result > 0) {
+                Tools.mensajeInfo("La consulta se a guardado correctamente.");
+            }else{
+                Tools.mensajeInfo("La consulta no se a podido guardar.");
+            }
+        }
+        
+    }
+
+    @FXML
+    private void btnGuardarEmployee_onclick(ActionEvent event) {
+        if (!txtNombreEmpleado.getText().equals("") && !txtApellidosEmpleado.getText().equals("") && !txtDireccionEmpleado.getText().equals("")
+                && !txtTelefonoEmpleado.getText().equals("") && !txtCelularEmpleado.getText().equals("") && !txtCorreoEmpleado.getText().equals("")
+                && !txtUsuarioEmpleado.getText().equals("") && !pwClaveEmpleado.getText().equals("") && !pwClave2Empleado.getText().equals("")
+                && cbEmpleado.getSelectionModel().getSelectedIndex() != 0) {
+            
+            String name = txtNombreEmpleado.getText();
+            String lastName = txtApellidosEmpleado.getText();
+            String direction = txtDireccionEmpleado.getText();
+            String phone = txtTelefonoEmpleado.getText();
+            String cellular = txtCelularEmpleado.getText();
+            String mail = txtCorreoEmpleado.getText();
+            String username = txtUsuarioEmpleado.getText();
+            String password1 = pwClaveEmpleado.getText();
+            String password2 = pwClave2Empleado.getText();
+            String password;
+            String type = cbEmpleado.getSelectionModel().getSelectedItem();
+            
+            if (password1.equals(password2)) {
+                password = pwClaveEmpleado.getText();
+                
+                int resultado;
+                if (empleadoEditando == null) {
+                    Employee employee = new Employee(name, lastName, direction, phone, cellular, mail, username, password, type);
+                    resultado = Employee.saveEmpleado(employee);
+                }else{
+                    Employee employee = new Employee(empleadoEditando.getId(), name, lastName, direction, phone, cellular, mail, username, password, type);
+                    resultado = Employee.modifyEmpleado(employee);
+                }                
+                
+                if (resultado > 0) {
+                    Tools.mensajeInfo("El empleado se ha guardado correctamente");
+                    limpiarEmpleados();
+                }else{
+                    Tools.mensajeInfo("El empleado no se ha podido guardar correctamente");
+                }
+            }else{
+                Tools.mensajeInfo("Verifique que las contraseñas coincidan");              
+            }      
+            empleadoEditando = null;
+        }else{
+            Tools.mensajeInfo("Complete todos los campos");
+        }
+    }
+
+    @FXML
+    private void subTab3_2_onselect(Event event) {
+        if (subTab3_2.isSelected()) {
+            getListDoctors();
+            setColumnsEmployees();
+            tbEmpleado.setItems(listDoctorsx);
+        }
+    }
+
+    private void setColumnsEmployees() {
+        colEmpleado.setCellValueFactory((TableColumn.CellDataFeatures<Employee, String> employee) -> 
+                new SimpleStringProperty(employee.getValue().nombreCompleto())); 
+        colDireccionEmpleado.setCellValueFactory(new PropertyValueFactory<>("direction"));
+        colTelefonoEmpleado.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        colCelularEmpleado.setCellValueFactory(new PropertyValueFactory<>("cellular"));
+        colCorreoEmpleado.setCellValueFactory(new PropertyValueFactory<>("mail"));
+        colOcupacionEmpleado.setCellValueFactory(new PropertyValueFactory<>("type"));
+        colOpcionesEmpleado.setCellFactory((TableColumn<Employee, String> param) -> {
+            TableCell<Employee, String> tc = new TableCell(){
+                @Override
+                protected void updateItem(Object item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        this.setGraphic(null);
+                        return;
+                    }
+                    
+                    Button btnEditar = new Button();
+                    btnEditar.getStyleClass().add("btnEdit");
+                    btnEditar.setFocusTraversable(false);
+                    btnEditar.setOnAction((ActionEvent event) -> {
+                        Employee employee = (Employee) this.getTableView().getItems().get(this.getIndex());
+                        editEmployee(employee);
+                    });   
+                    
+                    Button btnDelete = new Button();
+                    btnDelete.getStyleClass().add("btnDelete");
+                    btnDelete.setFocusTraversable(false);
+                    btnDelete.setOnAction((ActionEvent event) -> {
+                        Employee employee = (Employee) this.getTableView().getItems().get(this.getIndex());
+                        int result = Employee.deleteEmpleado(employee);
+                        if (result > 0) {
+                            Tools.mensajeInfo("El empleado se a eliminado correctamente");
+                            listDoctorsx.remove(employee);
+                        }
+                    }); 
+                    
+                    HBox hbox = new HBox(3);
+                    hbox.getChildren().addAll(btnEditar, btnDelete);        
+                    this.setGraphic(hbox);
+                }
+            }; 
+            return tc;
+        });
+    }
+    
+    private void editEmployee(Employee empleado){
+        empleadoEditando = empleado;
+        txtNombreEmpleado.setText(empleado.getName());
+        txtApellidosEmpleado.setText(empleado.getLastName());
+        txtDireccionEmpleado.setText(empleado.getDirection());
+        txtTelefonoEmpleado.setText(empleado.getPhone());
+        txtCelularEmpleado.setText(empleado.getCellular());
+        txtCorreoEmpleado.setText(empleado.getMail());
+        txtUsuarioEmpleado.setText(empleado.getUsername());
+        cbEmpleado.getSelectionModel().select(empleado.getType());
+        tabPane_Empleados.getSelectionModel().select(subTab3_1);
+    }
+    
+    private void getListDoctors() {
+        listDoctorsx.clear();
+        List<Employee> employees = Employee.listEmployees();
+        for (Employee employee : employees) {
+            listDoctorsx.add(employee);
+        }
+    }
+    
+    private void limpiarEmpleados(){
+        txtNombreEmpleado.setText("");
+        txtApellidosEmpleado.setText("");
+        txtDireccionEmpleado.setText("");
+        txtTelefonoEmpleado.setText("");
+        txtCelularEmpleado.setText("");
+        txtCorreoEmpleado.setText("");
+        txtUsuarioEmpleado.setText("");
+        pwClaveEmpleado.setText("");
+        pwClave2Empleado.setText("");
+        cbEmpleado.getSelectionModel().clearSelection();
+        empleadoEditando = null;
     }
 }

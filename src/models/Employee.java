@@ -55,6 +55,30 @@ public class Employee {
         this.type = type;
     }
 
+    /**
+     * 
+     * @param name
+     * @param lastName
+     * @param direction
+     * @param phone
+     * @param cellular
+     * @param mail
+     * @param username
+     * @param password
+     * @param type 
+     */
+    public Employee(String name, String lastName, String direction, String phone, String cellular, String mail, String username, String password, String type) {
+        this.name = name;
+        this.lastName = lastName;
+        this.direction = direction;
+        this.phone = phone;
+        this.cellular = cellular;
+        this.mail = mail;
+        this.username = username;
+        this.password = password;
+        this.type = type;
+    }
+
         /**
      * Iniciar sesión
      * @param employee
@@ -90,7 +114,7 @@ public class Employee {
      * Lista de empleados
      * @return 
      */
-    public static List<Employee> listPatients(){
+    public static List<Employee> listEmployees(){
         String query = "SELECT * FROM empleados";
         ResultSet rs = Conexion.executeQuery(query);
         List<Employee> employeesList = new ArrayList<Employee>();
@@ -120,6 +144,11 @@ public class Employee {
         }
     } 
     
+    /**
+     * Retorna la informacion del empleado sabiendo el id
+     * @param id_doctor
+     * @return 
+     */
     public static Employee getEmployee(int id_doctor){
         String query = "SELECT * FROM empleados WHERE emp_id ="+id_doctor;
         ResultSet rs = Conexion.executeQuery(query);
@@ -148,8 +177,47 @@ public class Employee {
         return null;
     }
     
+    /**
+     * Nombre completo del empleado
+     * @return 
+     */
     public String nombreCompleto(){
         return this.name + " " + this.lastName;
+    }
+    
+    /**
+     * Guardar un empleado en la base de datos
+     * @param employee
+     * @return 
+     */
+    public static int saveEmpleado(Employee employee){
+        String query = "INSERT INTO empleados (emp_nombre, emp_apellidos, emp_direccion, emp_telefono, emp_telefono_movil, emp_correo_electronico,"
+                + "emp_tipo, emp_user, emp_password) VALUES ('"+employee.getName()+"', '"+employee.getLastName()+"', '"+employee.getDirection()+"',"
+                + " '"+employee.getPhone()+"', '"+employee.getCellular()+"', '"+employee.getMail()+"', '"+employee.getType()+"', "
+                + " '"+employee.getUsername()+"', '"+employee.getPassword()+"' )";
+        return Conexion.executeUpdate(query);
+    }
+           
+    /**
+     * Eliminar empleado
+     * @param employee
+     * @return 
+     */
+    public static int deleteEmpleado(Employee employee){
+        String query = "DELETE FROM empleados WHERE emp_id = "+employee.getId();
+        return Conexion.executeUpdate(query);
+    }
+    
+    /**
+     * Modificar empleado
+     * @param employee
+     * @return 
+     */
+    public static int modifyEmpleado(Employee employee){
+        String query = "UPDATE empleados SET emp_nombre = '"+employee.getName()+"', emp_apellidos = '"+employee.getLastName()+"', emp_direccion = '"+employee.getDirection()+"'"
+                + "emp_telefono = "+employee.getPhone()+", emp_telefono_movil = "+employee.getCellular()+", emp_correo_electronico = '"+employee.getMail()+"',"
+                + "emp_tipo = '"+employee.getType()+"', emp_user = '"+employee.getUsername()+"', emp_password = '"+employee.getPassword()+"' WHERE emp_id = "+employee.getId();
+        return Conexion.executeUpdate(query);
     }
     
     public int getId() {

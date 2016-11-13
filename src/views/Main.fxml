@@ -36,7 +36,7 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                           <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
                                           <Label text="%lblNombrePaciente" />
@@ -76,7 +76,7 @@
                                           <TextField fx:id="txtRespParentezco" GridPane.columnIndex="4" GridPane.rowIndex="5" />
                                           <TextField fx:id="txtReferenciado" GridPane.columnIndex="4" GridPane.rowIndex="6" />
                                           <TextArea fx:id="txtDatosEspeciales" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="7" />
-                                          <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="4" GridPane.rowIndex="8">
+                                          <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="4" GridPane.rowIndex="8">
                                              <children>
                                                 <Button fx:id="btnGuardarPaciente" mnemonicParsing="false" onAction="#btnGuardarPaciente_onclick" text="%btnGuardarPaciente" />
                                                 <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#btnLimpiar_onclick" text="%btnLimpiar" />
@@ -105,7 +105,7 @@
                               <VBox layoutX="30.0" layoutY="20.0" spacing="10.0">
                                  <children>
                                     <Label styleClass="title" text="%lblTitleVerPacientes" />
-                                    <HBox layoutX="30.0" layoutY="30.0">
+                                    <HBox alignment="CENTER_LEFT" layoutX="30.0" layoutY="30.0" spacing="5.0">
                                        <children>
                                           <Label text="%lblBuscar" />
                                           <TextField layoutX="10.0" layoutY="24.0" />
@@ -182,7 +182,7 @@
                                     <VBox layoutX="30.0" layoutY="20.0" spacing="10.0">
                                        <children>
                                           <Label styleClass="title" text="%lblTitleNuevaCita" />
-                                          <HBox>
+                                          <HBox alignment="CENTER_LEFT" spacing="10.0">
                                              <children>
                                                 <Label text="%lblBuscar" />
                                                 <ComboBox fx:id="cbBuscarPaciente" editable="true" onAction="#cbBuscarPaciente_onAction" prefHeight="25.0" prefWidth="250.0" />
@@ -231,7 +231,7 @@
                                           <TextField fx:id="txtDoctorConsulta" disable="true" prefHeight="25.0" prefWidth="270.0" />
                                        </children>
                                     </HBox>
-                                    <HBox prefHeight="25.0" prefWidth="449.0" spacing="5.0">
+                                    <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="449.0" spacing="5.0">
                                        <children>
                                           <Label text="Fecha:" />
                                           <TextField fx:id="txtFechaConsulta" disable="true" />
@@ -277,10 +277,10 @@
                               <VBox layoutX="30.0" layoutY="207.0" prefWidth="915.0" spacing="5.0">
                                  <children>
                                     <Label styleClass="subTitle" text="%lblIndicacionesConsulta" />
-                                    <TextArea layoutX="26.0" layoutY="207.0" prefHeight="200.0" prefWidth="4519.0" />
+                                    <TextArea fx:id="txtIndicacionesConsulta" layoutX="26.0" layoutY="207.0" prefColumnCount="5" prefHeight="200.0" />
                                     <HBox alignment="CENTER_RIGHT" prefWidth="200.0">
                                        <children>
-                                          <Button fx:id="btnGuardarConsulta" mnemonicParsing="false" text="%btnGuardarConsulta" />
+                                          <Button fx:id="btnGuardarConsulta" mnemonicParsing="false" onAction="#btnGuardarConsulta_onclick" text="%btnGuardarConsulta" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -292,9 +292,86 @@
             </TabPane>
          </content>
     </Tab>
-      <Tab fx:id="tab3" text="%lblTab3">
+      <Tab text="%lblTab3">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            <TabPane fx:id="tabPane_Empleados" styleClass="subTabPane" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab fx:id="subTab3_1" styleClass="subTab" text="%lblSubTab3_1">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox layoutX="30.0" layoutY="20.0" spacing="10.0">
+                                 <children>
+                                    <Label styleClass="title" text="%lblEmployeeTitle" />
+                                    <Label styleClass="subTitle" text="%lblEmployeeSubTitle" />
+                                 </children>
+                              </VBox>
+                              <GridPane hgap="5.0" layoutX="30.0" layoutY="100.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="110.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="%lblNombresEmployee" />
+                                    <Label text="%lblApellidosEmployee" GridPane.rowIndex="1" />
+                                    <Label text="%lblDireccionEmployee" GridPane.rowIndex="2" />
+                                    <Label text="%lblTelefonoEmployee" GridPane.rowIndex="3" />
+                                    <Label text="%lblCelularEmployee" GridPane.rowIndex="4" />
+                                    <Label text="%lblCorreoEmployee" GridPane.rowIndex="5" />
+                                    <Label text="%lblUsuarioEmployee" GridPane.columnIndex="2" />
+                                    <Label text="%lblPass1Employee" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <Label text="%lblPass2Employee" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <Label text="%lblTipoEmployee" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                    <TextField fx:id="txtNombreEmpleado" GridPane.columnIndex="1" />
+                                    <TextField fx:id="txtApellidosEmpleado" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField fx:id="txtDireccionEmpleado" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <TextField fx:id="txtTelefonoEmpleado" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <TextField fx:id="txtCelularEmpleado" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <TextField fx:id="txtCorreoEmpleado" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <TextField fx:id="txtUsuarioEmpleado" GridPane.columnIndex="3" />
+                                    <PasswordField fx:id="pwClaveEmpleado" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                    <PasswordField fx:id="pwClave2Empleado" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                    <ComboBox fx:id="cbEmpleado" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                    <Button fx:id="btnGuardarEmployee" mnemonicParsing="false" onAction="#btnGuardarEmployee_onclick" text="%btnGuardarEmployee" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab fx:id="subTab3_2" onSelectionChanged="#subTab3_2_onselect" styleClass="subTab" text="%lblSubTab3_2">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="30.0" layoutY="20.0" styleClass="title" text="Lista de empleados" />
+                              <TableView fx:id="tbEmpleado" layoutX="30.0" layoutY="65.0" prefHeight="200.0" prefWidth="950.0">
+                                <columns>
+                                  <TableColumn fx:id="colEmpleado" prefWidth="200.0" text="Empleado" />
+                                  <TableColumn fx:id="colDireccionEmpleado" prefWidth="200.0" text="Direccion" />
+                                    <TableColumn fx:id="colTelefonoEmpleado" prefWidth="70.0" text="Telefono" />
+                                    <TableColumn fx:id="colCelularEmpleado" text="Celular" />
+                                    <TableColumn fx:id="colCorreoEmpleado" prefWidth="180.0" text="Correo" />
+                                    <TableColumn fx:id="colOcupacionEmpleado" prefWidth="130.0" text="Ocupacion" />
+                                    <TableColumn fx:id="colOpcionesEmpleado" prefWidth="90.0" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
         </content>
       </Tab>
   </tabs>
