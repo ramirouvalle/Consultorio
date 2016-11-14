@@ -229,13 +229,32 @@ public class MainController implements Initializable {
     private ObservableList<Employee> listDoctorsx = FXCollections.observableArrayList();
     @FXML
     private TabPane tabPane_Empleados;
-    
+    @FXML
+    private TabPane tabPaneGeneral;
+    @FXML
+    private Tab subTab1_3;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cbEmpleado.setItems(FXCollections.observableArrayList("Asistente","Doctor"));
+        getListDoctors();
+        cbxDoctor.setCellFactory((ListView<Employee> param) -> new ListCell<Employee>(){
+            @Override
+            protected void updateItem(Employee item, boolean empty) {
+                try{
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setGraphic(null);
+                    } else {
+                        setText(item.nombreCompleto());
+                    }
+                }catch(Exception ex){
+                    System.out.println(ex);
+                }
+            }
+        });        
     }    
 
     /**
@@ -397,6 +416,8 @@ public class MainController implements Initializable {
                     btnCita.setFocusTraversable(false);
                     btnCita.setOnAction((ActionEvent event) -> {
                         //Agendar cita
+                        Patient patient = (Patient) this.getTableView().getItems().get(this.getIndex());
+                        agendarCitaAPaciente(patient);
                     });
                     
                     HBox hbox = new HBox(3);
@@ -503,25 +524,24 @@ public class MainController implements Initializable {
                         System.out.println(ex + "y");
                     }
                 }
-            });
-            
-            ObservableList<Employee> listDoctors = FXCollections.observableArrayList(Employee.listEmployees());
-            cbxDoctor.setCellFactory((ListView<Employee> param) -> new ListCell<Employee>(){
-                @Override
-                protected void updateItem(Employee item, boolean empty) {
-                    try{
-                        super.updateItem(item, empty);
-                        if (item == null || empty) {
-                            setGraphic(null);
-                        } else {
-                            setText(item.nombreCompleto());
-                        }
-                    }catch(Exception ex){
-                        System.out.println(ex);
-                    }
-                }
-            });
-            cbxDoctor.setItems(listDoctors);
+            });           
+            //ObservableList<Employee> listDoctors = FXCollections.observableArrayList(Employee.listEmployees());
+//            cbxDoctor.setCellFactory((ListView<Employee> param) -> new ListCell<Employee>(){
+//                @Override
+//                protected void updateItem(Employee item, boolean empty) {
+//                    try{
+//                        super.updateItem(item, empty);
+//                        if (item == null || empty) {
+//                            setGraphic(null);
+//                        } else {
+//                            setText(item.nombreCompleto());
+//                        }
+//                    }catch(Exception ex){
+//                        System.out.println(ex);
+//                    }
+//                }
+//            });
+//            cbxDoctor.setItems(listDoctorsx);
         }else{
             limpiarTabCitas();
         }
@@ -615,7 +635,7 @@ public class MainController implements Initializable {
         txtNomCompPaciente.setText("");
         txtDireccionCita.setText("");
         txtResponsableCita.setText("");
-        txtNombreDoctor.setText("");
+        txtNombreDoctor.setText("");     
         cbxDoctor.getItems().clear();
         cbBuscarPaciente.getItems().clear();
         cbxDoctor.getSelectionModel().clearSelection();
@@ -738,6 +758,10 @@ public class MainController implements Initializable {
         idAppointmentEdit = patientCita.getId();
     }
     
+    /**
+     * Se consulta una cita pasando los datos ala pestaña de consultar
+     * @param cita 
+     */
     public void consultarCita(Appointment cita){
         Patient patientConsult = Patient.getPatientByID(cita.getIdPatient());
         Employee doctorConsult = Employee.getEmployee(cita.getIdDoctor());
@@ -756,6 +780,10 @@ public class MainController implements Initializable {
         tabPane_Citas.getSelectionModel().select(subTab2_3);     
     }
 
+    /**
+     * Al dar clic en el boton de guardar consulta
+     * @param event 
+     */
     @FXML
     private void btnGuardarConsulta_onclick(ActionEvent event) {
         if (!txtIndicacionesConsulta.getText().equals("")) {
@@ -772,6 +800,10 @@ public class MainController implements Initializable {
         
     }
 
+    /**
+     * Al dar click en el boton de guardar empleado
+     * @param event 
+     */
     @FXML
     private void btnGuardarEmployee_onclick(ActionEvent event) {
         if (!txtNombreEmpleado.getText().equals("") && !txtApellidosEmpleado.getText().equals("") && !txtDireccionEmpleado.getText().equals("")
@@ -818,6 +850,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Al seleccionar la tab de ver empleados
+     * @param event 
+     */
     @FXML
     private void subTab3_2_onselect(Event event) {
         if (subTab3_2.isSelected()) {
@@ -827,6 +863,9 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Setea las columnas de la tabla empleados
+     */
     private void setColumnsEmployees() {
         colEmpleado.setCellValueFactory((TableColumn.CellDataFeatures<Employee, String> employee) -> 
                 new SimpleStringProperty(employee.getValue().nombreCompleto())); 
@@ -874,6 +913,10 @@ public class MainController implements Initializable {
         });
     }
     
+    /**
+     * Pasa los datos a la pestaña de agregar empleado pero para EDITARLO
+     * @param empleado 
+     */
     private void editEmployee(Employee empleado){
         empleadoEditando = empleado;
         txtNombreEmpleado.setText(empleado.getName());
@@ -887,6 +930,9 @@ public class MainController implements Initializable {
         tabPane_Empleados.getSelectionModel().select(subTab3_1);
     }
     
+    /**
+     * Obtiene una lista de doctores
+     */
     private void getListDoctors() {
         listDoctorsx.clear();
         List<Employee> employees = Employee.listEmployees();
@@ -895,6 +941,9 @@ public class MainController implements Initializable {
         }
     }
     
+    /**
+     * Limpia los campos de la pestaña de nuevo empleado
+     */
     private void limpiarEmpleados(){
         txtNombreEmpleado.setText("");
         txtApellidosEmpleado.setText("");
@@ -907,5 +956,23 @@ public class MainController implements Initializable {
         pwClave2Empleado.setText("");
         cbEmpleado.getSelectionModel().clearSelection();
         empleadoEditando = null;
+    }
+    
+    /**
+     * Pasar los datos del paciente a la pestaña de cita
+     * @param patient 
+     */
+    private void agendarCitaAPaciente(Patient patient) {
+        txtNomCompPaciente.setText(patient.nombreCompleto());
+        txtDireccionCita.setText(patient.getDireccion());
+        txtResponsableCita.setText(patient.getResponsable());
+        tabPaneGeneral.getSelectionModel().select(tab2);
+        tabPane_Citas.getSelectionModel().select(subTab2_1);
+        tabPane_Citas.getSelectionModel().select(subTab2_1);
+        cbxDoctor.getItems().clear();
+        cbBuscarPaciente.getItems().clear();
+        cbxDoctor.getSelectionModel().clearSelection();
+        cbBuscarPaciente.getSelectionModel().clearSelection();   
+        cbxDoctor.setItems(listDoctorsx);
     }
 }

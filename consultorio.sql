@@ -2,10 +2,10 @@
 -- version 4.5.1
 -- http://www.phpmyadmin.net
 --
--- Servidor: localhost
--- Tiempo de generación: 08-10-2016 a las 01:50:04
--- Versión del servidor: 10.1.16-MariaDB
--- Versión de PHP: 5.6.24
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 14-11-2016 a las 01:05:45
+-- Versión del servidor: 10.1.10-MariaDB
+-- Versión de PHP: 5.6.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -28,11 +28,18 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `citas` (
   `cit_id` int(11) NOT NULL COMMENT 'Identificador de la cita.',
-  `cit_hora_inicial` time NOT NULL COMMENT 'Hora inicial de la cita.\n\nEl formato de almacenamiento de horas es de:\nHH:MM:SS (Horas:Minutos:Segundos)',
-  `cit_hora_final` time NOT NULL COMMENT 'Hora final de la cita.\n\nEl formato de almacenamiento de horas es de:\nHH:MM:SS (Horas:Minutos:Segundos)',
-  `cit_fecha` date NOT NULL COMMENT 'Día programado para la cita.\n\nEl formato de la fecha es:\nAño-Mes-Día ',
-  `cit_fecha_extendida` datetime NOT NULL COMMENT 'Fecha extendida de la cita.\n\nEl formato de la fecha extendida de la cita es:\nAño-Mes-Día Horas:Minutos:Segundos'
+  `pac_id` int(11) NOT NULL COMMENT 'Hora inicial de la cita.El formato de almacenamiento de horas es de:HH:MM:SS (Horas:Minutos:Segundos)',
+  `emp_id` int(11) NOT NULL COMMENT 'Hora final de la cita.El formato de almacenamiento de horas es de:HH:MM:SS (Horas:Minutos:Segundos)',
+  `cit_fecha` varchar(10) NOT NULL COMMENT 'Día programado para la cita.El formato de la fecha es:Año-Mes-Día ',
+  `cit_hora` varchar(10) NOT NULL COMMENT 'Fecha extendida de la cita.El formato de la fecha extendida de la cita es:Año-Mes-Día Horas:Minutos:Segundos'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Información del agendado de citas';
+
+--
+-- Volcado de datos para la tabla `citas`
+--
+
+INSERT INTO `citas` (`cit_id`, `pac_id`, `emp_id`, `cit_fecha`, `cit_hora`) VALUES
+(2, 2, 1, '2016-11-24', '11:22');
 
 -- --------------------------------------------------------
 
@@ -42,9 +49,16 @@ CREATE TABLE `citas` (
 
 CREATE TABLE `consultas` (
   `con_id` int(11) NOT NULL COMMENT 'Identificador de cada consulta.',
-  `usu_id` int(11) DEFAULT NULL COMMENT 'Identificador del usuario que realizó la consulta.\n\nEl usuario que realice consulta deberá ser de tipo Doctor',
-  `pac_id` int(11) DEFAULT NULL COMMENT 'Identificador del paciente.'
+  `cit_id` int(11) DEFAULT NULL COMMENT 'Identificador del paciente.',
+  `con_indicaciones` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Información de cada consulta realizada';
+
+--
+-- Volcado de datos para la tabla `consultas`
+--
+
+INSERT INTO `consultas` (`con_id`, `cit_id`, `con_indicaciones`) VALUES
+(1, 2, 'Esta es una consulta de prueba\nveremos si funciona\ncorrectamente\nesta \nprueba.');
 
 -- --------------------------------------------------------
 
@@ -70,7 +84,7 @@ CREATE TABLE `empleados` (
 --
 
 INSERT INTO `empleados` (`emp_id`, `emp_nombre`, `emp_apellidos`, `emp_direccion`, `emp_telefono`, `emp_telefono_movil`, `emp_correo_electronico`, `emp_tipo`, `emp_user`, `emp_password`) VALUES
-(1, 'Ramiro Alejandro', 'Uvalle Vigueras', 'Nardo 626, 3 caminos', '81818181', '8117466318', 'ramiro@gmail.com', 'doctor', 'admin', 'admin');
+(1, 'Ramiro Alejandro', 'Uvalle Vigueras', 'nardo 626, 3 caminos', '81818181', '8181818181', 'ramiro@gmail.com', 'Doctor', 'admin', 'admin');
 
 -- --------------------------------------------------------
 
@@ -102,8 +116,11 @@ CREATE TABLE `pacientes` (
 --
 
 INSERT INTO `pacientes` (`pac_id`, `pac_nombre`, `pac_apellidoPaterno`, `pac_apellidoMaterno`, `pac_fechaNacimiento`, `pac_genero`, `pac_direccion`, `pac_codigo_postal`, `pac_telefono`, `pac_telefono_movil`, `pac_correo`, `pac_responsable`, `pac_responsable_parentezco`, `pac_referenciado`, `pac_rfc`, `pac_datos_especiales`) VALUES
-(1, 'katia', 'reina', 'sepulveda', '2016-10-07', 'Femenino', 'direcion tal, calle tal', '12345', '81818181', '8181818182', 'katia@gmail.com', '', '', '', '1234567890', ''),
-(2, 'Ramiro', 'Uvalle', 'Vigueras', '2016-10-07', 'Masculino', 'Calle buen 777, colonia dia', '12548', '81828384', '8182838485', 'ramiro@gmail.com', '', '', '', '3216549871', '');
+(1, 'katia', 'reina', 'sepulveda', '2016-10-07', 'Femenino', 'direcion tal, calle tal', '12345', '81818181', '8181818182', 'katia@gmail.com', 'Ramiro', '', 'Pareja', '1234567890', ''),
+(2, 'alejandro', 'reina', 'sepulveda', '2016-10-07', 'Femenino', 'direcion tal, calle tal', '12345', '81818181', '8181818182', 'katia@gmail.com', 'Ramiro', '', 'Pareja', '1234567890', ''),
+(3, 'karla', 'rodriguez', 'soraleno', '2016-10-07', 'Femenino', 'direcion tal, calle tal', '12345', '81818181', '8181818182', 'katia@gmail.com', 'Ramiro', 'Pareja', '', '1234567890', ''),
+(4, 'katia', 'rodriguez', 'sepulveda', '2016-10-07', 'Femenino', 'direcion tal, calle tal', '12345', '81818181', '8181818182', 'katia@gmail.com', 'Ramiro', 'Pareja', '', '1234567890', ''),
+(5, 'Ramiro Alejandro', 'Uvalle', 'Vigueras', '2016-11-06', 'Masculino', 'Pedro de alba S/N, San Nicolas, N.L.', '67190', '81818181', '8181818181', 'ramiro@gmail.com', '', '', '', '1234567890', 'Ninguno');
 
 -- --------------------------------------------------------
 
@@ -196,12 +213,12 @@ ALTER TABLE `sesion_detalles`
 -- AUTO_INCREMENT de la tabla `citas`
 --
 ALTER TABLE `citas`
-  MODIFY `cit_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de la cita.';
+  MODIFY `cit_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de la cita.', AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `consultas`
 --
 ALTER TABLE `consultas`
-  MODIFY `con_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada consulta.';
+  MODIFY `con_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada consulta.', AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `empleados`
 --
@@ -211,7 +228,7 @@ ALTER TABLE `empleados`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `pac_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada paciente.', AUTO_INCREMENT=3;
+  MODIFY `pac_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada paciente.', AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT de la tabla `recetas`
 --
