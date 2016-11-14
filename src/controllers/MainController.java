@@ -4,7 +4,6 @@ import consultorio.Tools;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
@@ -963,6 +962,7 @@ public class MainController implements Initializable {
      * @param patient 
      */
     private void agendarCitaAPaciente(Patient patient) {
+        patientCita = patient;
         txtNomCompPaciente.setText(patient.nombreCompleto());
         txtDireccionCita.setText(patient.getDireccion());
         txtResponsableCita.setText(patient.getResponsable());
